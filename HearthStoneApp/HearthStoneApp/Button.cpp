@@ -1,15 +1,12 @@
+#pragma once
 #include "button.h"
 
 Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, 
-	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, function _callBackFunction,
-	GameHandler& _gameHandler) {
+	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, CallbacksEnum _callBackFunction,
+	std::shared_ptr<GameHandler> _gameHandler) : Interactive(_position, _size, _gameHandler) {
 
-	//Creating body
-	body = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
-	body.setPosition(_position);
 	body.setFillColor(_color);
 
-	//Creating text
 	text = sf::Text(_text, *_font, _size.y/2);
 	text.setOrigin(sf::Vector2f((text.getCharacterSize() * text.getString().getSize())/4, text.getCharacterSize()/1.5));
 	auto textPosistion = sf::Vector2f(_position.x + 0.5 * _size.x, _position.y + 0.5 * _size.y);
@@ -17,18 +14,16 @@ Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std
 	text.setFillColor(_fontColor);
 
 	callBackFunction = _callBackFunction;
-	gameHandler = std::make_shared<GameHandler>(_gameHandler);
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-	gameHandler->getWindowPtr()->draw(body);
+	Interactive::draw(target, states);
+	if (isItClicked()) callback();
 	gameHandler->getWindowPtr()->draw(text);
 }
 
-sf::RectangleShape Button::getBody() {
-	return body;
-}
+void Button::update() {}
 
-void Button::callback() {
-	callBackFunction(gameHandler);
+void Button::callback() const{
+	gameHandler->queueCallback(callBackFunction);
 }

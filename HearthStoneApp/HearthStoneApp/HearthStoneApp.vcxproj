@@ -117,6 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,14 +148,18 @@
   <ItemGroup>
     <ClCompile Include="button.cpp" />
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="card.cpp" />
+    <ClCompile Include="interactive.cpp" />
+    <ClCompile Include="interactive.h" />
     <ClCompile Include="gameHandler.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
     <ClInclude Include="callbacks.h" />
-    <ClInclude Include="game.h" />
+    <ClInclude Include="card.h" />
     <ClInclude Include="gameHandler.h" />
+    <ClInclude Include="updatable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

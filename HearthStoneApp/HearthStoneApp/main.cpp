@@ -7,19 +7,21 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "This app", sf::Style::Titlebar);
-    GameHandler gameHandler(&window);
+
+    GameHandler gameHandler;
     gameHandler.loadFont("C:/Windows/Fonts/calibri.ttf", "Calibri");
-    sf::Font a = gameHandler.getFontByName("Calibri");
-    Button newButton(sf::Vector2f(120, 80), sf::Vector2f(400, 50), sf::Color::White, "Display 1", a, sf::Color::Black, &callbacks::fn, &window);
-    Button newButton2(sf::Vector2f(120, 180), sf::Vector2f(400, 50), sf::Color::White, "Display 1", a, sf::Color::Black, &callbacks::fn, &window);
-    Button newButton3(sf::Vector2f(120, 280), sf::Vector2f(400, 50), sf::Color::White, "Exit", a, sf::Color::Black, &callbacks::shutDown, &window);
+    Button newButton(sf::Vector2f(120, 80), sf::Vector2f(400, 50), sf::Color::White, "Display 1",
+        gameHandler.getFontPtrByName("Calibri"), sf::Color::Black, &callbacks::fn, gameHandler);
+    Button newButton2(sf::Vector2f(120, 180), sf::Vector2f(400, 50), sf::Color::White, "Display 1",
+        gameHandler.getFontPtrByName("Calibri"), sf::Color::Black, &callbacks::fn, gameHandler);
+    Button newButton3(sf::Vector2f(120, 280), sf::Vector2f(400, 50), sf::Color::White, "Exit",
+        gameHandler.getFontPtrByName("Calibri"), sf::Color::Black, &callbacks::shutDown, gameHandler);
     Button buttons[3] = { newButton, newButton2, newButton3 };
 
-    while (window.isOpen())
+    while (gameHandler.getWindowPtr()->isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        while (gameHandler.getWindowPtr()->pollEvent(event))
         {
             if (event.type == sf::Event::MouseButtonPressed) {
                 for (auto& button : buttons) {
@@ -27,11 +29,11 @@ int main()
                 }
             }
         }
-        window.clear();
+        gameHandler.getWindowPtr()->clear();
         for (auto& button : buttons) {
-            window.draw(button);
+            gameHandler.getWindowPtr()->draw(button);
         }
-        window.display();
+        gameHandler.getWindowPtr()->display();
     }
     return 0;
 }

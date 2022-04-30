@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "gameHandler.h"
 
-typedef void (*function)(sf::RenderWindow*);
+typedef void (*function)(std::shared_ptr<GameHandler>);
 
 //Button class compatible with SFML
 class Button : public sf::Drawable {
@@ -17,8 +18,8 @@ private:
 	//Pointer to callback function
 	function callBackFunction;
 
-	//Pointer to window that button should be display on
-	sf::RenderWindow* parentWindow;
+	//Pointer to game handler (allows to manage callbacks and drawing function)
+	std::shared_ptr<GameHandler> gameHandler;
 
 	//Overwritten function from abstact drawable class
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -26,8 +27,9 @@ private:
 public:
 
 	//Deafult button constructor
-	Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, sf::Font &_font, sf::Color _fontColor, 
-		function _callBackFunction, sf::RenderWindow* _parentWindow);
+	Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text,
+		std::shared_ptr<sf::Font> _font, sf::Color _fontColor, function _callBackFunction,
+		GameHandler& _gameHandler);
 
 	//Body getter ptr
 	sf::RectangleShape getBody();

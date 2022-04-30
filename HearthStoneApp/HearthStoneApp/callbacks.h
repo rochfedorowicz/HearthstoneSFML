@@ -1,10 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "gameHandler.h"
 
+//All available callback functions
 namespace callbacks {
 
-    void fn(sf::RenderWindow* ptr);
+    void fn(std::shared_ptr<GameHandler> ptr);
 
-    void shutDown(sf::RenderWindow* windowPtr);
+    //Shuts window down
+    void shutDown(std::shared_ptr<GameHandler> ptr);
 }

@@ -1,9 +1,10 @@
 #include "callbacks.h"
 
-void callbacks::fn(sf::RenderWindow* ptr) {
+
+void callbacks::fn(std::shared_ptr<GameHandler> ptr) {
     std::cout << " " << 1;
 }
 
-void callbacks::shutDown(sf::RenderWindow* windowPtr) {
-    windowPtr->close();
+void callbacks::shutDown(std::shared_ptr<GameHandler> ptr) {
+    ptr->getWindowPtr()->close();
 }

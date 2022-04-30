@@ -1,7 +1,8 @@
 #include "button.h"
 
-Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, sf::Font& _font, sf::Color _fontColor,
-	function _callBackFunction, sf::RenderWindow* _parentWindow) {
+Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, 
+	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, function _callBackFunction,
+	GameHandler& _gameHandler) {
 
 	//Creating body
 	body = sf::RectangleShape(sf::Vector2f(_size.x, _size.y));
@@ -9,19 +10,19 @@ Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std
 	body.setFillColor(_color);
 
 	//Creating text
-	text = sf::Text(_text, _font, _size.y/2);
+	text = sf::Text(_text, *_font, _size.y/2);
 	text.setOrigin(sf::Vector2f((text.getCharacterSize() * text.getString().getSize())/4, text.getCharacterSize()/1.5));
 	auto textPosistion = sf::Vector2f(_position.x + 0.5 * _size.x, _position.y + 0.5 * _size.y);
 	text.setPosition(textPosistion);
 	text.setFillColor(_fontColor);
 
 	callBackFunction = _callBackFunction;
-	parentWindow = _parentWindow;
+	gameHandler = std::make_shared<GameHandler>(_gameHandler);
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-	parentWindow->draw(body);
-	parentWindow->draw(text);
+	gameHandler->getWindowPtr()->draw(body);
+	gameHandler->getWindowPtr()->draw(text);
 }
 
 sf::RectangleShape Button::getBody() {
@@ -29,5 +30,5 @@ sf::RectangleShape Button::getBody() {
 }
 
 void Button::callback() {
-	callBackFunction(parentWindow);
+	callBackFunction(gameHandler);
 }

@@ -1,11 +1,9 @@
 #pragma once
 #include "card.h"
 
-void Card::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-	gameHandler->getWindowPtr()->draw(texture);
-}
-
 void Card::update() {
+	Interactive::update();
+	gameHandler->getWindowPtr()->draw(texture);
 	if (isItClicked()) {
 		shouldBeDragged = true;
 		differenceOfDrag = gameHandler->getMousePosition() - body.getPosition();
@@ -16,10 +14,10 @@ void Card::update() {
 	else shouldBeDragged = false;
 }
 
-Card::Card(std::shared_ptr<sf::Texture> _texture, std::shared_ptr<GameHandler> _gameHandler) : Interactive(sf::Vector2f((* _texture).getSize()), sf::Vector2f((*_texture).getSize()), _gameHandler) {
+Card::Card(std::shared_ptr<sf::Texture> _texture, std::shared_ptr<GameHandler> _gameHandler) 
+	: Interactive(sf::Vector2f(2, 2), sf::Vector2f(_texture->getSize()), _gameHandler) {
 	texture = sf::Sprite(*_texture);
-	texture.setPosition(100, 100);
-	body.setPosition(100, 100);
+	texture.setPosition(sf::Vector2f(2, 2));
 }
 
 void Card::move(sf::Vector2f _change) {

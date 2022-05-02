@@ -10,18 +10,29 @@
 #include "callbacks.h"
 #include "updatable.h"
 
-enum class CallbacksEnum { TEST_FN, SHUT_DOWN };
+//Enum indicating callback invoked
+enum class CallbacksEnum { TEST_FN, SHUT_DOWN, PLAY_GAME, DISPLAY_MENU};
 
+//Enum indicating current game state
+enum class GameStateEnum { MENU, PLAY, NONE};
+
+//Function pointer
 typedef void (*function)(std::shared_ptr<sf::RenderWindow>);
 
 //Class used for game handling
-class GameHandler {
+class GameHandler : public std::enable_shared_from_this<GameHandler> {
 
 	//Pointer to current used window
 	std::shared_ptr<sf::RenderWindow> currentWindowPtr;
 
+	//Game state indicating enum
+	GameStateEnum gameSatate;
+
 	//Map of used fonts
 	std::map<std::string, std::shared_ptr<sf::Font>> fonts;
+
+	//Map of used texture
+	std::map<std::string, std::shared_ptr<sf::Texture>> textures;
 
 	//Queue of callbacks
 	std::queue<function> callbacksQueue;
@@ -38,13 +49,25 @@ class GameHandler {
 	//Vector of drawables
 	std::vector<std::shared_ptr<Updatable>> interfaceElements;
 
+	//Function for chechikng queue of waiting callbacks
+	void checkCallbacks();
+
+	//Function adding new interface element
+	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
+
+	//Loading grapchical interface elements required for current game state
+	void loadGUIforGamestate();
+
 public:
 
 	//Defaul constructor, invoking it creates a window
 	GameHandler();
 
-	//Function that allows us to load font from file
+	//Function that allows to load font from file
 	bool loadFont(std::string _path, std::string _name);
+
+	//Function that allows to load texture from file
+	bool loadTexture(std::string _path, std::string _name);
 
 	//Font getter 
 	std::shared_ptr<sf::Font> getFontPtrByName(std::string _nameOfFont);
@@ -63,12 +86,6 @@ public:
 
 	//Function for window management
 	void manageWindow();
-
-	//Function adding button as drawable
-	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
-
-	//Function for chechikng queue of waiting callbacks
-	void checkCallbacks();
 
 	//Function for chechikng queue of waiting callbacks
 	void queueCallback(CallbacksEnum _functionEnum);

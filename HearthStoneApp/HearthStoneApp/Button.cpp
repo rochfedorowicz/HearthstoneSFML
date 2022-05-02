@@ -16,13 +16,16 @@ Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std
 	callBackFunction = _callBackFunction;
 }
 
-void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-	Interactive::draw(target, states);
+Button::Button(sf::Vector2f _position, sf::Vector2f _size, ButtonBlueprint _bluePrint, std::string _text,
+	CallbacksEnum _callBackFunction, std::shared_ptr<GameHandler> _gameHandler)
+	: Button(_position, _size, _bluePrint.color, _text, _gameHandler->getFontPtrByName(_bluePrint.fontName),
+	_bluePrint.fontColor, _callBackFunction, _gameHandler) {};
+
+void Button::update() {
+	Interactive::update();
 	if (isItClicked()) callback();
 	gameHandler->getWindowPtr()->draw(text);
 }
-
-void Button::update() {}
 
 void Button::callback() const{
 	gameHandler->queueCallback(callBackFunction);

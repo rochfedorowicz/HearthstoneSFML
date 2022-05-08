@@ -1,13 +1,9 @@
 #pragma once
 #include "interactive.h"
 
-Interactive::Interactive(sf::Vector2f _position, sf::Vector2f _size, std::shared_ptr<GameHandler> _gameHandler) {
-	body = sf::RectangleShape(_size);
-	body.setPosition(_position);
-
+Interactive::Interactive(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::shared_ptr<GameHandler> _gameHandler)
+	: UpdatableRect(_position, _size, _color, _gameHandler) {
 	body.setOutlineColor(sf::Color(32, 230, 32, 200));
-
-	gameHandler = std::shared_ptr<GameHandler>(_gameHandler);
 }
 
 bool Interactive::isCursorHoverdOver() const {
@@ -23,5 +19,5 @@ bool Interactive::isItClicked() const {
 void Interactive::update() {
 	if (isCursorHoverdOver()) body.setOutlineThickness(3);
 	else body.setOutlineThickness(0);
-	gameHandler->getWindowPtr()->draw(body);
+	UpdatableRect::update();
 }

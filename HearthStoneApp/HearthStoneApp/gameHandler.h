@@ -46,14 +46,14 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	//Mouse pressed information
 	bool mousePressed;
 
+	//Mouse just released information
+	bool mouseReleased;
+
 	//Vector of drawables
 	std::vector<std::shared_ptr<Updatable>> interfaceElements;
 
 	//Function for chechikng queue of waiting callbacks
 	void checkCallbacks();
-
-	//Function adding new interface element
-	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
 
 	//Loading grapchical interface elements required for current game state
 	void loadGUIforGamestate();
@@ -84,11 +84,17 @@ public:
 	//Logic function checking if mouse was clicked
 	bool isMousePressed();
 
+	//Logic function checking if mouse was released
+	bool isMouseReleased();
+
 	//Function for window management
 	void manageWindow();
 
 	//Function for chechikng queue of waiting callbacks
 	void queueCallback(CallbacksEnum _functionEnum);
+
+	//Function adding new interface element
+	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
 };
 #endif
 

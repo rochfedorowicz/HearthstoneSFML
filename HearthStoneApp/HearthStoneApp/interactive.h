@@ -3,18 +3,13 @@
 #define INTERACTIVE
 #include <SFML/Graphics.hpp>
 #include "gameHandler.h"
-#include "updatable.h"
+#include "updateableRect.h"
 
-class Interactive : public Updatable{
-protected:
-
-	sf::RectangleShape body;
-
-	std::shared_ptr<GameHandler> gameHandler;
+class Interactive : public UpdatableRect{
 
 public:
 
-	Interactive(sf::Vector2f _position, sf::Vector2f _size, std::shared_ptr<GameHandler> _gameHandler);
+	Interactive(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::shared_ptr<GameHandler> _gameHandler);
 
 	bool isCursorHoverdOver() const;
 

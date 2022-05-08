@@ -3,9 +3,7 @@
 
 Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, 
 	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, CallbacksEnum _callBackFunction,
-	std::shared_ptr<GameHandler> _gameHandler) : Interactive(_position, _size, _gameHandler) {
-
-	body.setFillColor(_color);
+	std::shared_ptr<GameHandler> _gameHandler) : Interactive(_position, _size, _color, _gameHandler) {
 
 	text = sf::Text(_text, *_font, _size.y/2);
 	text.setOrigin(sf::Vector2f((text.getCharacterSize() * text.getString().getSize())/4, text.getCharacterSize()/1.5));

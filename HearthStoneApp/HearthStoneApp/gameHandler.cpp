@@ -3,6 +3,7 @@
 #include "button.h"
 #include "card.h"
 #include "cardPlacer.h"
+#include "militaryCard.h"
 
 GameHandler::GameHandler() {
 	currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: MENU", sf::Style::Titlebar);
@@ -133,8 +134,8 @@ void GameHandler::queueCallback(CallbacksEnum _functionEnum) {
 }
 
 void GameHandler::loadGUIforGamestate() {
-	std::shared_ptr<Card> card = std::make_shared<Card>(sf::Vector2f(0, 0), textures["ct"], shared_from_this()),
-		card2 = std::make_shared<Card>(sf::Vector2f(0, 0), textures["ct"], shared_from_this());
+	std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 20, 5, shared_from_this()),
+		card2 = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 5, 20, shared_from_this());
 	switch (gameSatate){
 
 		case GameStateEnum::MENU:
@@ -159,9 +160,9 @@ void GameHandler::loadGUIforGamestate() {
 				"Menu ", CallbacksEnum::DISPLAY_MENU, shared_from_this()));
 			appendDrawable(std::make_shared<Button>(sf::Vector2f(1730, 200), sf::Vector2f(160, 50), buttonBlueprints::MAIN_STYLE_BUTTON,
 				"Exit", CallbacksEnum::SHUT_DOWN, shared_from_this()));
-			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 100), sf::Vector2f(1500, 300),
+			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 100), sf::Vector2f(1500, 300), false,
 				std::vector<std::shared_ptr<Card>> { card }, shared_from_this()));
-			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 500), sf::Vector2f(1500, 300),
+			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 500), sf::Vector2f(1500, 300), true,
 				std::vector<std::shared_ptr<Card>> { card2 }, shared_from_this()));
 			appendDrawable(card);
 			appendDrawable(card2);

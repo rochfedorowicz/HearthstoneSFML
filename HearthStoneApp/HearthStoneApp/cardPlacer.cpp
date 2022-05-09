@@ -5,19 +5,22 @@
 
 std::shared_ptr<CardPlacer> CardPlacer::currentlyActivePlaceHolder = std::shared_ptr<CardPlacer>(nullptr);
 
-CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, std::shared_ptr<GameHandler> _gameHandler) 
+CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::shared_ptr<GameHandler> _gameHandler)
 	: Interactive(_position, _size, sf::Color::Blue, _gameHandler) {
 	body = sf::FloatRect(_position, _size);
+	playerPosesion = _belongsToPlayer;
 }
 
-CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler)
-	: CardPlacer(_position, _size, _gameHandler) {
+CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler)
+	: CardPlacer(_position, _size, _belongsToPlayer, _gameHandler) {
 	cards = _initializeCardVector;
+	for (auto& card : cards) card->playerPosesion = _belongsToPlayer;
 }
 
 void CardPlacer::addCard(std::shared_ptr<Card> _cardPtr) {
 	_cardPtr->texture.setColor(sf::Color(14, 18, 123));
 	cards.push_back(_cardPtr);
+	_cardPtr->playerPosesion = playerPosesion;
 }
 
 bool CardPlacer::shouldBeAligned(std::shared_ptr<Card> _card) {
@@ -80,9 +83,13 @@ void CardPlacer::update() {
 	if (Card::getCurrentlyHeldCard().get() != nullptr && isCursorHoverdOver() && gameHandler->isMouseReleased() 
 		&& currentlyActivePlaceHolder != shared_from_this()) {
 
-		addCard(Card::getCurrentlyHeldCard());
-		currentlyActivePlaceHolder->removeCard(Card::getCurrentlyHeldCard());
-
+		if (Card::getCurrentlyHeldCard()->playerPosesion == playerPosesion) {
+			addCard(Card::getCurrentlyHeldCard());
+			currentlyActivePlaceHolder->removeCard(Card::getCurrentlyHeldCard());
+		}
+		else if (getCardPointedByMouse().get() != nullptr) {
+			Card::getCurrentlyHeldCard()->interactWithCard(getCardPointedByMouse());
+		}
 	}
 
 	for (auto& card : cards) {
@@ -155,4 +162,10 @@ void CardPlacer::removeCard(std::shared_ptr<Card> _cardPtr) {
 			return;
 		}
 	}
+}
+
+std::shared_ptr<Card> CardPlacer::getCardPointedByMouse() {
+	for (auto& card : cards)
+		if (card->getBounds().contains(gameHandler->getMousePosition())) return card;
+	return std::shared_ptr<Card>(nullptr);
 }

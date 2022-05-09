@@ -20,7 +20,6 @@ class Card : public Interactive, public std::enable_shared_from_this<Card> {
 
 	static std::shared_ptr<Card> currentlyHeldCard;
 
-
 public:
 		
 	//Texture of a card
@@ -48,5 +47,9 @@ public:
 	bool isItInThread();
 
 	void setThreadState();
+
+	bool playerPosesion;
+
+	virtual void interactWithCard(std::shared_ptr<Card> _card) = 0;
 };
 #endif

@@ -155,6 +155,7 @@
     <ClCompile Include="interactive.h" />
     <ClCompile Include="gameHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="militaryCard.cpp" />
     <ClCompile Include="updateableRect.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="card.h" />
     <ClInclude Include="cardPlacer.h" />
     <ClInclude Include="gameHandler.h" />
+    <ClInclude Include="militaryCard.h" />
     <ClInclude Include="updatable.h" />
     <ClInclude Include="updateableRect.h" />
   </ItemGroup>

@@ -26,11 +26,15 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 	void removeCard(std::shared_ptr<Card> _cardPtr);
 
+	bool playerPosesion;
+
+	std::shared_ptr<Card> getCardPointedByMouse();
+
 public:
 
-	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, std::shared_ptr<GameHandler> _gameHandler);
+	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::shared_ptr<GameHandler> _gameHandler);
 
-	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler);
+	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler);
 
 	void addCard(std::shared_ptr<Card> _cardPtr);
 

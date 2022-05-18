@@ -11,5 +11,7 @@ public:
 	//Abstract update function used further in game handler
 	virtual void update() = 0;
 
+	virtual bool shouldBeDestroyed() = 0;
+
 };
 #endif

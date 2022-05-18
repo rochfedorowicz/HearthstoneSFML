@@ -5,6 +5,8 @@
 #include "gameHandler.h"
 #include "interactive.h"
 
+enum class CardType {MILITARY, OTHER};
+
 //Class representing card
 class Card : public Interactive, public std::enable_shared_from_this<Card> {
 
@@ -51,5 +53,7 @@ public:
 	bool playerPosesion;
 
 	virtual void interactWithCard(std::shared_ptr<Card> _card) = 0;
+
+	virtual CardType getCardType() = 0;
 };
 #endif

@@ -1,6 +1,7 @@
 #pragma once
 #include "militaryCard.h"
 #include <sstream>
+#define UP_CAST(upperClass, object) dynamic_cast<upperClass*>(object.get())
 
 MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, std::shared_ptr<GameHandler> _gameHandler)
 	: Card(_position, _texture, _gameHandler) {
@@ -9,8 +10,10 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 }
 
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
-	MilitaryCard& militaryCard2 = dynamic_cast<MilitaryCard&>(*_card.get());
-	militaryCard2.health -= damage;
+	if (_card->getCardType() == CardType::MILITARY) {
+		auto militaryCard2 = UP_CAST(MilitaryCard, _card);
+		militaryCard2->health -= damage;
+	}
 }
 
 void MilitaryCard::update() {
@@ -24,4 +27,12 @@ void MilitaryCard::update() {
 	info.setFillColor(sf::Color(255, 0, 0));
 	info.setOutlineThickness(2);
 	gameHandler->getWindowPtr()->draw(info);
+}
+
+CardType MilitaryCard::getCardType() {
+	return CardType::MILITARY;
+}
+
+bool MilitaryCard::shouldBeDestroyed() {
+	return health <= 0;
 }

@@ -20,9 +20,13 @@ public:
 	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Interacting with another cards
-	virtual void interactWithCard(std::shared_ptr<Card> _card);
+	void interactWithCard(std::shared_ptr<Card> _card);
 
 	//Virtual function that updates state of object
 	void update();
+
+	CardType getCardType();
+
+	bool shouldBeDestroyed();
 };
 #endif

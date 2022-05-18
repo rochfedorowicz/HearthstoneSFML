@@ -12,3 +12,12 @@ UpdatableRect::UpdatableRect(sf::Vector2f _position, sf::Vector2f _size, sf::Col
 void UpdatableRect::update() {
 	gameHandler->getWindowPtr()->draw(body);
 }
+
+bool UpdatableRect::shouldBeDestroyed() {
+	return false;
+}
+
+sf::Vector2f UpdatableRect::getCenterOfBody() {
+	return sf::Vector2f(body.getGlobalBounds().left + body.getGlobalBounds().width / 2,
+		body.getGlobalBounds().top + body.getGlobalBounds().height / 2);
+}

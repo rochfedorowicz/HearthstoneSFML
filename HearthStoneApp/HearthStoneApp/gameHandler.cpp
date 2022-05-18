@@ -77,8 +77,27 @@ void GameHandler::manageWindow() {
         }
         currentWindowPtr->clear();
 		checkCallbacks();
-		for (auto& element : interfaceElements) element->update();
+		for (auto& element : interfaceElements) {
+			element->update(); 
+			//TODO: Implement as an event invoked by picking card
+			if (Card::getCurrentlyHeldCard().get() != nullptr &&
+				element.get() == Card::getCurrentlyHeldCard().get() && element != interfaceElements.back())
+				element.swap(interfaceElements.back());
+			/////////////////////////////////////////////////////
+			if (element->shouldBeDestroyed()) {
+				disposeList.push_back(element);
+			}
+		}
         currentWindowPtr->display();
+
+		for (int i = 0; i < disposeList.size(); ++i) {		
+			for (auto j = interfaceElements.begin(); j != interfaceElements.end(); ++j) {
+				if (*j == disposeList[i]) {
+					interfaceElements.erase(j);
+					break;
+				}
+			}
+		}
     }
 	switch (gameSatate) {
 
@@ -134,8 +153,8 @@ void GameHandler::queueCallback(CallbacksEnum _functionEnum) {
 }
 
 void GameHandler::loadGUIforGamestate() {
-	std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 20, 5, shared_from_this()),
-		card2 = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 5, 20, shared_from_this());
+	std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 40, 3, shared_from_this()),
+		card2 = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 100, 1, shared_from_this());
 	switch (gameSatate){
 
 		case GameStateEnum::MENU:

@@ -50,7 +50,7 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	bool mouseReleased;
 
 	//Vector of drawables
-	std::vector<std::shared_ptr<Updatable>> interfaceElements;
+	std::vector<std::shared_ptr<Updatable>> interfaceElements, disposeList;
 
 	//Function for chechikng queue of waiting callbacks
 	void checkCallbacks();

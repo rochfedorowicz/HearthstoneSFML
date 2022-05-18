@@ -19,5 +19,9 @@ public:
 	//Overwritten function from abstact updatable class
 	virtual void update();
 
+	virtual bool shouldBeDestroyed();
+
+	sf::Vector2f getCenterOfBody();
+
 };
 #endif

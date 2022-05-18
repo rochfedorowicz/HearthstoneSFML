@@ -4,13 +4,13 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
-#include "card.h"
+#include "militaryCard.h"
 
 class CardPlacer : public Interactive, public std::enable_shared_from_this<CardPlacer> {
 	
 	sf::FloatRect body;
 
-	std::vector<std::shared_ptr<Card>> cards;
+	std::vector<std::shared_ptr<Card>> cards, disposeList;
 
 	void update();
 

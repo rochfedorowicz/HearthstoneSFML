@@ -6,6 +6,8 @@
 #include <memory>
 #include "militaryCard.h"
 
+enum class CardPlacerType {BATTLE_PLACE_PLAYER, BATTLE_PLACE_OPPONENT, HERO_PLACE_PLAYER, HERO_PLACE_OPPONENT};
+
 class CardPlacer : public Interactive, public std::enable_shared_from_this<CardPlacer> {
 	
 	sf::FloatRect body;
@@ -26,15 +28,15 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 	void removeCard(std::shared_ptr<Card> _cardPtr);
 
-	bool playerPosesion;
+	CardPlacerType type;
 
 	std::shared_ptr<Card> getCardPointedByMouse();
 
 public:
 
-	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::shared_ptr<GameHandler> _gameHandler);
+	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::shared_ptr<GameHandler> _gameHandler);
 
-	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler);
+	CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler);
 
 	void addCard(std::shared_ptr<Card> _cardPtr);
 

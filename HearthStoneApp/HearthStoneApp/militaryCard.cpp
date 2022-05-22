@@ -1,16 +1,19 @@
 #pragma once
 #include "militaryCard.h"
-#include <sstream>
+#include "myHelper.h"
 #define UP_CAST(upperClass, object) dynamic_cast<upperClass*>(object.get())
 
-MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, std::shared_ptr<GameHandler> _gameHandler)
+MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, int _mana, std::shared_ptr<GameHandler> _gameHandler)
 	: Card(_position, _texture, _gameHandler) {
 	health = _health;
 	damage = _damage;
+	mana = _mana;
+	damageLabel = UpdatabText(_position + sf::Vector2f(30, 170), sf::Vector2f(0, 60), MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	healthLabel = UpdatabText(_position + sf::Vector2f(120, 170), sf::Vector2f(0, 60), MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 }
 
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
-	if (_card->getCardType() == CardType::MILITARY) {
+	if (_card->getCardType() == CardType::MILITARY && gameHandler->getPlayerPtr()->consumeMana(mana)) {
 		auto militaryCard2 = UP_CAST(MilitaryCard, _card);
 		militaryCard2->health -= damage;
 	}
@@ -18,15 +21,10 @@ void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
 
 void MilitaryCard::update() {
 	Card::update();
-	std::stringstream s;
-	s << health << "         " << damage;
-	std::string s2 = "";
-	std::getline(s, s2);
-	info = sf::Text(s2, *gameHandler->getFontPtrByName("Calibri"));
-	info.setPosition(body.getPosition());
-	info.setFillColor(sf::Color(255, 0, 0));
-	info.setOutlineThickness(2);
-	gameHandler->getWindowPtr()->draw(info);
+	damageLabel.contentUpdate(MyHelper::convertIntToString(damage));
+	healthLabel.contentUpdate(MyHelper::convertIntToString(health));
+	damageLabel.update();
+	healthLabel.update();
 }
 
 CardType MilitaryCard::getCardType() {
@@ -35,4 +33,10 @@ CardType MilitaryCard::getCardType() {
 
 bool MilitaryCard::shouldBeDestroyed() {
 	return health <= 0;
+}
+
+void MilitaryCard::move(sf::Vector2f _change) {
+	Card::move(_change);
+	damageLabel.positionUpdate(_change + sf::Vector2f(30, 200));
+	healthLabel.positionUpdate(_change + sf::Vector2f(120, 200));
 }

@@ -9,6 +9,9 @@
 #include <vector>
 #include "callbacks.h"
 #include "updatable.h"
+#include "roundsHandler.h"
+#include "playerHandler.h"
+
 
 //Enum indicating callback invoked
 enum class CallbacksEnum { TEST_FN, SHUT_DOWN, PLAY_GAME, DISPLAY_MENU};
@@ -33,6 +36,10 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 
 	//Map of used texture
 	std::map<std::string, std::shared_ptr<sf::Texture>> textures;
+
+	std::shared_ptr<PlayerHandler> player, opponent;
+
+	std::shared_ptr<RoundsHandler> roundsHandler;
 
 	//Queue of callbacks
 	std::queue<function> callbacksQueue;
@@ -95,6 +102,12 @@ public:
 
 	//Function adding new interface element
 	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
+
+	std::shared_ptr<PlayerHandler> getPlayerPtr();
+
+	std::shared_ptr<PlayerHandler> getOpponentPtr();
+
+	std::shared_ptr<RoundsHandler> getRoundHandlerPtr();
 };
 #endif
 

@@ -2,80 +2,49 @@
 #include "cardPlacer.h"
 #include <thread>
 #include <chrono>
-#include "myMathHelper.h"
+#include "myHelper.h"
 
 std::shared_ptr<CardPlacer> CardPlacer::currentlyActivePlaceHolder = std::shared_ptr<CardPlacer>(nullptr);
 
-CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::shared_ptr<GameHandler> _gameHandler)
+CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::shared_ptr<GameHandler> _gameHandler)
 	: Interactive(_position, _size, sf::Color::Blue, _gameHandler) {
 	body = sf::FloatRect(_position, _size);
-	playerPosesion = _belongsToPlayer;
+	type = _type;
 }
 
-CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, bool _belongsToPlayer, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler)
-	: CardPlacer(_position, _size, _belongsToPlayer, _gameHandler) {
+CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler)
+	: CardPlacer(_position, _size, _type, _gameHandler) {
 	cards = _initializeCardVector;
-	for (auto& card : cards) card->playerPosesion = _belongsToPlayer;
+	for (auto& card : cards) card->playerPosesion = type == CardPlacerType::BATTLE_PLACE_PLAYER;
 }
 
 void CardPlacer::addCard(std::shared_ptr<Card> _cardPtr) {
-	_cardPtr->texture.setColor(sf::Color(14, 18, 123));
+	_cardPtr->texture.setColor(sf::Color(14, 118, 123));
 	cards.push_back(_cardPtr);
-	_cardPtr->playerPosesion = playerPosesion;
+	_cardPtr->playerPosesion = type == CardPlacerType::BATTLE_PLACE_PLAYER;
 }
 
 bool CardPlacer::shouldBeAligned(std::shared_ptr<Card> _card) {
 	int amount = 0;
 	for (auto& corner : _card->getCardCorners()) {
-		if (body.contains(corner)) amount = amount + 1;
+		if (body.contains(corner)) ++amount;;
 	}
 	if (amount >= 4) return false;
 	else return true;
 }
 
 //Works as thread!!!
-void CardPlacer::alignCardToBody(std::shared_ptr<Card> _card) {
-	//while (shouldBeAligned(_card)) {
+void CardPlacer::alignCardToBody(std::shared_ptr<Card> _card) {	
+		 
 		sf::Vector2f centerOfCard = _card->getCenterOfBody(), centerOfCH = getCenterOfBody();
 
-		std::vector<double> distances = { MyMathHelper::getDistance(centerOfCard + sf::Vector2f(1,0), centerOfCH),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), centerOfCH),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(0,1), centerOfCH),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), centerOfCH) };
+		std::vector<double> distances = { MyHelper::getDistance(centerOfCard + sf::Vector2f(1,0), centerOfCH),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), centerOfCH),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,1), centerOfCH),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), centerOfCH) };
 
-		int index = MyMathHelper::getIndexOfSpecifiedItemInVector(distances, [](double& val1, double& val2) {
+		int index = MyHelper::getIndexOfSpecifiedItemInVector(distances, [](double& val1, double& val2) {
 			return val1 > val2; });
-		sf::Vector2f moveVector;
-		switch (index)
-		{ 
-			case 0: moveVector = sf::Vector2f(1, 0); break;
-			case 1: moveVector = sf::Vector2f(-1, 0); break;
-			case 2: moveVector = sf::Vector2f(0, 1); break;
-			case 3: moveVector = sf::Vector2f(0, -1);
-			default: break;
-		}
-		_card->move(_card->getCardCorners()[0] + moveVector);
-		std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
-		//if (CardPlacer::currentlyActivePlaceHolder != shared_from_this()) break;
-	//}
-	_card->setThreadState();
-}
-
-
-//Works as thread!!!
-void CardPlacer::moveCards(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2) {
-
-	while (shouldBeMoved(_card, _card2)) {
-		sf::Vector2f centerOfCard = _card->getCenterOfBody(), centerOfCard2 = getCenterOfBody();
-
-		std::vector<double> distances = { MyMathHelper::getDistance(centerOfCard + sf::Vector2f(1,0), centerOfCard2),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), centerOfCard2),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(0,1), centerOfCard2),
-			MyMathHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), centerOfCard2) };
-
-		auto index = MyMathHelper::getIndexOfSpecifiedItemInVector(distances, [](double& val1, double& val2) {
-			return val1 < val2; });
-
 		sf::Vector2f moveVector;
 		switch (index)
 		{
@@ -85,11 +54,36 @@ void CardPlacer::moveCards(std::shared_ptr<Card> _card, std::shared_ptr<Card> _c
 		case 3: moveVector = sf::Vector2f(0, -1);
 		default: break;
 		}
-
 		_card->move(_card->getCardCorners()[0] + moveVector);
-		_card2->move(_card2->getCardCorners()[0] + moveVector * -1.0f);
-		std::this_thread::sleep_for(std::chrono::nanoseconds(1500));
+		_card->setThreadState();
+}
+
+
+//Works as thread!!!
+void CardPlacer::moveCards(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2) {
+
+	sf::Vector2f centerOfCard = _card->getCenterOfBody(), centerOfCard2 = _card2->getCenterOfBody();
+
+	std::vector<double> distances = { MyHelper::getDistance(centerOfCard + sf::Vector2f(1,0), centerOfCard2),
+		MyHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), centerOfCard2),
+		MyHelper::getDistance(centerOfCard + sf::Vector2f(0,1), centerOfCard2),
+		MyHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), centerOfCard2) };
+
+	auto index = MyHelper::getIndexOfSpecifiedItemInVector(distances, [](double& val1, double& val2) {
+		return val1 < val2; });
+
+	sf::Vector2f moveVector;
+	switch (index)
+	{
+	case 0: moveVector = sf::Vector2f(1, 0); break;
+	case 1: moveVector = sf::Vector2f(-1, 0); break;
+	case 2: moveVector = sf::Vector2f(0, 1); break;
+	case 3: moveVector = sf::Vector2f(0, -1);
+	default: break;
 	}
+
+	_card->move(_card->getCardCorners()[0] + moveVector);
+	_card2->move(_card2->getCardCorners()[0] + moveVector * -1.0f);
 	_card->setThreadState();
 	_card2->setThreadState();
 }
@@ -109,11 +103,11 @@ void CardPlacer::update() {
 	if (Card::getCurrentlyHeldCard().get() != nullptr && isCursorHoverdOver() && gameHandler->isMouseReleased() 
 		&& currentlyActivePlaceHolder != shared_from_this()) {
 
-		if (Card::getCurrentlyHeldCard()->playerPosesion == playerPosesion) {
+		if (Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_PLAYER) {
 			addCard(Card::getCurrentlyHeldCard());
 			currentlyActivePlaceHolder->removeCard(Card::getCurrentlyHeldCard());
 		}
-		else if (getCardPointedByMouse().get() != nullptr) {
+		else if (getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_OPPONENT) {
 			Card::getCurrentlyHeldCard()->interactWithCard(getCardPointedByMouse());
 		}
 	}
@@ -121,19 +115,21 @@ void CardPlacer::update() {
 	for (auto& card : cards) {
 		if (!card->isItInThread() && !gameHandler->isMousePressed() && shouldBeAligned(card)) {
 			card->setThreadState();
-			std::thread th1(&CardPlacer::alignCardToBody, this, card);
-			th1.detach();
+			std::thread aligningThread(&CardPlacer::alignCardToBody, this, card);
+			aligningThread.detach();
 		}
-		if (card->shouldBeDestroyed()) {
-			disposeList.push_back(card);
-		}
+
 		for (auto& card2 : cards) {
 			if (card != card2 && !card->isItInThread() && !card2->isItInThread() && !gameHandler->isMousePressed() && shouldBeMoved(card, card2)) {
 				card->setThreadState();
 				card2->setThreadState();
-				std::thread th1(&CardPlacer::moveCards, this, card, card2);
-				th1.detach();
+				std::thread movingThread(&CardPlacer::moveCards, this, card, card2);
+				movingThread.detach();
 			}
+		}
+
+		if (card->shouldBeDestroyed()) {
+			disposeList.push_back(card);
 		}
 	}
 

@@ -2,22 +2,23 @@
 #ifndef MILITARY_CARD
 #define MILITARY_CARD
 #include "card.h"
+#include "updateableText.h"
 
 //Class representing military card
 class MilitaryCard : public Card {
-
-	//Amount of health military card possesses
-	int health;
 	
-	//Amount of damage military card can deal
-	int damage;
+	//Lables used to display card statistics
+	UpdatabText damageLabel, healthLabel;
 
-	sf::Text info;
+protected:
+
+	//Amount of health and damage dealed military card possesses
+	int health, damage, mana;
 
 public:
 
 	//Deafult military card constructor
-	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, std::shared_ptr<GameHandler> _gameHandler);
+	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, int _mana, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Interacting with another cards
 	void interactWithCard(std::shared_ptr<Card> _card);
@@ -25,8 +26,13 @@ public:
 	//Virtual function that updates state of object
 	void update();
 
-	CardType getCardType();
+	//Card type getter
+	virtual CardType getCardType();
 
+	//Logic value indicating if card should be disposed
 	bool shouldBeDestroyed();
+
+	//Function moving object (generally update its poistion)
+	void move(sf::Vector2f _change);
 };
 #endif

@@ -5,7 +5,8 @@
 #include "gameHandler.h"
 #include "interactive.h"
 
-enum class CardType {MILITARY, OTHER};
+//Enum representing posible card types
+enum class CardType {MILITARY, PLAYER, OTHER};
 
 //Class representing card
 class Card : public Interactive, public std::enable_shared_from_this<Card> {
@@ -15,6 +16,7 @@ class Card : public Interactive, public std::enable_shared_from_this<Card> {
 	//Logic value indicating if this object should be dragged
 	bool shouldBeDragged;
 
+	//Lagic value indicating if card is inthread
 	bool inThread;
 
 	//Differnce of distance between a grip of mouse and the origin of the card 
@@ -44,16 +46,21 @@ public:
 
 
 	//Function moving object (generally update its poistion)
-	void move(sf::Vector2f _change);
+	virtual void move(sf::Vector2f _change);
 
+	//Getter for isInThread logic value
 	bool isItInThread();
 
+	//Setter changing logic state of isInThread value to opposite to current
 	void setThreadState();
 
+	//Logic value indicating if this card belongs to player
 	bool playerPosesion;
 
+	//Virtual function used for interaction with cards
 	virtual void interactWithCard(std::shared_ptr<Card> _card) = 0;
 
+	//Virtual function used for upcasting
 	virtual CardType getCardType() = 0;
 };
 #endif

@@ -156,8 +156,16 @@
     <ClCompile Include="gameHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="militaryCard.cpp" />
-    <ClCompile Include="myMathHelper.cpp" />
+    <ClCompile Include="myHelper.cpp" />
+    <ClCompile Include="playerCard.cpp" />
+    <ClCompile Include="playerHandler.cpp" />
+    <ClCompile Include="playerManaBar.cpp" />
+    <ClCompile Include="roundsHandler.cpp" />
+    <ClCompile Include="roundsTimeBar.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="updateableBar.cpp" />
     <ClCompile Include="updateableRect.cpp" />
+    <ClCompile Include="updateableText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h" />
@@ -167,9 +175,17 @@
     <ClInclude Include="cardPlacer.h" />
     <ClInclude Include="gameHandler.h" />
     <ClInclude Include="militaryCard.h" />
-    <ClInclude Include="myMathHelper.h" />
+    <ClInclude Include="myHelper.h" />
+    <ClInclude Include="playerCard.h" />
+    <ClInclude Include="playerHandler.h" />
+    <ClInclude Include="playerManaBar.h" />
+    <ClInclude Include="roundsHandler.h" />
+    <ClInclude Include="roundsTimeBar.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="updatable.h" />
+    <ClInclude Include="updateableBar.h" />
     <ClInclude Include="updateableRect.h" />
+    <ClInclude Include="updateableText.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

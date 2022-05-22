@@ -28,6 +28,12 @@
     <Filter Include="Pliki źródłowe\Interactives\Cards">
       <UniqueIdentifier>{a7c5015f-d8c1-4714-922f-346f46ed0c3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\Handlers">
+      <UniqueIdentifier>{bae2958a-eefc-4e69-9191-7e2b02002aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\Handlers">
+      <UniqueIdentifier>{9909eef9-ae0f-451d-aee2-83f402df128c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,16 +42,7 @@
     <ClCompile Include="callbacks.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="gameHandler.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="buttonBlueprint.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="interactive.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClCompile>
-    <ClCompile Include="interactive.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="updateableRect.cpp">
@@ -63,15 +60,45 @@
     <ClCompile Include="cardPlacer.cpp">
       <Filter>Pliki źródłowe\Interactives\Cards</Filter>
     </ClCompile>
-    <ClCompile Include="myMathHelper.cpp">
+    <ClCompile Include="myHelper.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="updateableText.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="playerCard.cpp">
+      <Filter>Pliki źródłowe\Interactives\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="interactive.cpp">
+      <Filter>Pliki źródłowe\Interactives</Filter>
+    </ClCompile>
+    <ClCompile Include="interactive.h">
+      <Filter>Pliki nagłówkowe\Interactives</Filter>
+    </ClCompile>
+    <ClCompile Include="updateableBar.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="gameHandler.cpp">
+      <Filter>Pliki źródłowe\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="playerHandler.cpp">
+      <Filter>Pliki źródłowe\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="playerManaBar.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="roundsHandler.cpp">
+      <Filter>Pliki źródłowe\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="roundsTimeBar.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="gameHandler.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="updatable.h">
@@ -95,7 +122,34 @@
     <ClInclude Include="cardPlacer.h">
       <Filter>Pliki nagłówkowe\Interactives\Cards</Filter>
     </ClInclude>
-    <ClInclude Include="myMathHelper.h">
+    <ClInclude Include="myHelper.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="updateableText.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="playerCard.h">
+      <Filter>Pliki nagłówkowe\Interactives\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="updateableBar.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="gameHandler.h">
+      <Filter>Pliki nagłówkowe\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="playerHandler.h">
+      <Filter>Pliki nagłówkowe\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="playerManaBar.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="roundsHandler.h">
+      <Filter>Pliki nagłówkowe\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="roundsTimeBar.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>

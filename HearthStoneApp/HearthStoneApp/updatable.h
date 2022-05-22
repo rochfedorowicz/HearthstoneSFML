@@ -11,6 +11,7 @@ public:
 	//Abstract update function used further in game handler
 	virtual void update() = 0;
 
+	//Abstract logic indicator function used further in game handler
 	virtual bool shouldBeDestroyed() = 0;
 
 };

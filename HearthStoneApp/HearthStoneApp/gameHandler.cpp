@@ -4,10 +4,16 @@
 #include "card.h"
 #include "cardPlacer.h"
 #include "militaryCard.h"
+#include "playerCard.h"
+#include "playerManaBar.h"
+#include "roundsTimeBar.h"
+
 
 GameHandler::GameHandler() {
 	currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: MENU", sf::Style::Titlebar);
 	gameSatate = GameStateEnum::MENU;
+	player = std::make_shared<PlayerHandler>(10, 10, 100);
+	roundsHandler = std::make_shared<RoundsHandler>(20);
 }
 
 bool GameHandler::loadFont(std::string _path, std::string _name) {
@@ -90,6 +96,12 @@ void GameHandler::manageWindow() {
 		}
         currentWindowPtr->display();
 
+		if (gameSatate == GameStateEnum::PLAY && roundsHandler->hasRoundFinished()) {
+			roundsHandler->changeTurn();
+			if (roundsHandler->getTurnOrder() == Turn::PLAYERS_TURN) player->renewMana();
+			roundsHandler->startRound();
+		}
+
 		for (int i = 0; i < disposeList.size(); ++i) {		
 			for (auto j = interfaceElements.begin(); j != interfaceElements.end(); ++j) {
 				if (*j == disposeList[i]) {
@@ -153,8 +165,9 @@ void GameHandler::queueCallback(CallbacksEnum _functionEnum) {
 }
 
 void GameHandler::loadGUIforGamestate() {
-	std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 40, 3, shared_from_this()),
-		card2 = std::make_shared<MilitaryCard>(sf::Vector2f(0, 0), textures["ct"], 100, 1, shared_from_this());
+	std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(sf::Vector2f(100, 100), textures["ct"], 40, 3, 10, shared_from_this()),
+		card2 = std::make_shared<MilitaryCard>(sf::Vector2f(100, 500), textures["ct"], 100, 1, 10, shared_from_this()),
+		playerCard = std::make_shared<PlayerCard>(sf::Vector2f(1700, 800), textures["ct"], player, shared_from_this());
 	switch (gameSatate){
 
 		case GameStateEnum::MENU:
@@ -179,14 +192,33 @@ void GameHandler::loadGUIforGamestate() {
 				"Menu ", CallbacksEnum::DISPLAY_MENU, shared_from_this()));
 			appendDrawable(std::make_shared<Button>(sf::Vector2f(1730, 200), sf::Vector2f(160, 50), buttonBlueprints::MAIN_STYLE_BUTTON,
 				"Exit", CallbacksEnum::SHUT_DOWN, shared_from_this()));
-			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 100), sf::Vector2f(1500, 300), false,
+			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 100), sf::Vector2f(1500, 300), CardPlacerType::BATTLE_PLACE_PLAYER,
 				std::vector<std::shared_ptr<Card>> { card }, shared_from_this()));
-			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 500), sf::Vector2f(1500, 300), true,
+			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(100, 500), sf::Vector2f(1500, 300), CardPlacerType::BATTLE_PLACE_OPPONENT,
 				std::vector<std::shared_ptr<Card>> { card2 }, shared_from_this()));
+			appendDrawable(std::make_shared<CardPlacer>(sf::Vector2f(1700, 800), sf::Vector2f(160, 250), CardPlacerType::HERO_PLACE_PLAYER,
+				std::vector<std::shared_ptr<Card>> { playerCard }, shared_from_this()));
 			appendDrawable(card);
 			appendDrawable(card2);
+			appendDrawable(playerCard);
+			appendDrawable(std::make_shared<PlayerManaBar>(sf::Vector2f(1740, 280), sf::Vector2f(60,500), BarType::VERTICAL, shared_from_this()));
+			appendDrawable(std::make_shared<RoundsTimeBar>(sf::Vector2f(1830, 280), sf::Vector2f(60, 500), BarType::VERTICAL, shared_from_this()));
+			roundsHandler->startRound();
 			break;
 
 		default: break;
 	}
+}
+
+
+std::shared_ptr<PlayerHandler> GameHandler::getPlayerPtr() {
+	return player;
+}
+
+std::shared_ptr<PlayerHandler> GameHandler::getOpponentPtr() {
+	return opponent;
+}
+
+std::shared_ptr<RoundsHandler> GameHandler::getRoundHandlerPtr() {
+	return roundsHandler;
 }

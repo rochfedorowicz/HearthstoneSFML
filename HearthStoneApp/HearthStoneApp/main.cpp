@@ -13,6 +13,7 @@ int main() {
 
     std::shared_ptr<GameHandler> gameHandlerPtr = std::make_shared<GameHandler>();
     gameHandlerPtr->loadTexture("cardTexture.png", "ct");
+    gameHandlerPtr->loadTexture("cardTextureSmall.png", "ctS");
     gameHandlerPtr->loadFont("C:/Windows/Fonts/calibri.ttf", "Calibri");
     gameHandlerPtr->loadFont("C:/Windows/Fonts/MATURASC.TTF", "Matura");
     gameHandlerPtr->manageWindow();

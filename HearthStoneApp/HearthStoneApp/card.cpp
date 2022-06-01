@@ -6,10 +6,12 @@ std::shared_ptr<Card> Card::currentlyHeldCard = std::shared_ptr<Card>(nullptr);
 void Card::update() {
 	Interactive::update();
 	gameHandler->getWindowPtr()->draw(texture);
-	if (isItClicked()) {
+	if (isItClicked() && canBeDragged && 
+		playerPosesion == (gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN ? true : false)) {
 		Card::currentlyHeldCard = shared_from_this();
 		shouldBeDragged = true;
 		differenceOfDrag = gameHandler->getMousePosition() - body.getPosition();
+		positionBeforeDrag = getCenterOfBody();
 	}
 	if (shouldBeDragged) {
 		if (gameHandler->isMousePressed())
@@ -26,6 +28,7 @@ Card::Card(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, std::s
 	texture = sf::Sprite(*_texture);
 	texture.setPosition(_position);
 	shouldBeDragged = inThread = false;
+	canBeDragged = true;
 }
 
 void Card::move(sf::Vector2f _change) {
@@ -53,4 +56,16 @@ bool Card::isItInThread() {
 
 void Card::setThreadState() {
 	inThread = inThread == true ? false : true;
+}
+
+sf::Vector2f Card::getPositionBeforeDrag() {
+	return positionBeforeDrag;
+}
+
+bool Card::getDraggability() {
+	return canBeDragged;
+}
+
+void Card::changeDraggabilityOfCard() {
+	canBeDragged = canBeDragged == true ? false : true;
 }

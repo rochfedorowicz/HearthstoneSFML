@@ -29,19 +29,25 @@ bool CardPlacer::shouldBeAligned(std::shared_ptr<Card> _card) {
 	for (auto& corner : _card->getCardCorners()) {
 		if (body.contains(corner)) ++amount;;
 	}
-	if (amount >= 4) return false;
-	else return true;
+	if (amount >= 4) {
+		if (!_card->getDraggability()) _card->changeDraggabilityOfCard();
+		return false;
+	}
+	else {
+		if (_card->getDraggability()) _card->changeDraggabilityOfCard();
+		return true;
+	}
 }
 
 //Works as thread!!!
 void CardPlacer::alignCardToBody(std::shared_ptr<Card> _card) {	
-		 
-		sf::Vector2f centerOfCard = _card->getCenterOfBody(), centerOfCH = getCenterOfBody();
 
-		std::vector<double> distances = { MyHelper::getDistance(centerOfCard + sf::Vector2f(1,0), centerOfCH),
-			MyHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), centerOfCH),
-			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,1), centerOfCH),
-			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), centerOfCH) };
+		sf::Vector2f centerOfCard = _card->getCenterOfBody(), lastPos = _card->getPositionBeforeDrag();
+
+		std::vector<double> distances = { MyHelper::getDistance(centerOfCard + sf::Vector2f(1,0), lastPos),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(-1,0), lastPos),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,1), lastPos),
+			MyHelper::getDistance(centerOfCard + sf::Vector2f(0,-1), lastPos) };
 
 		int index = MyHelper::getIndexOfSpecifiedItemInVector(distances, [](double& val1, double& val2) {
 			return val1 > val2; });
@@ -103,24 +109,30 @@ void CardPlacer::update() {
 	if (Card::getCurrentlyHeldCard().get() != nullptr && isCursorHoverdOver() && gameHandler->isMouseReleased() 
 		&& currentlyActivePlaceHolder != shared_from_this()) {
 
-		if (Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_PLAYER) {
+		if ((Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)
+				|| (!Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_OPPONENT &&
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)) {
 			addCard(Card::getCurrentlyHeldCard());
 			currentlyActivePlaceHolder->removeCard(Card::getCurrentlyHeldCard());
 		}
-		else if (getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_OPPONENT) {
+		else if ((getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_OPPONENT && 
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)
+				|| (getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN)) {
 			Card::getCurrentlyHeldCard()->interactWithCard(getCardPointedByMouse());
 		}
 	}
 
 	for (auto& card : cards) {
-		if (!card->isItInThread() && !gameHandler->isMousePressed() && shouldBeAligned(card)) {
+		if (!card->isItInThread() /* && !gameHandler->isMousePressed()*/ && shouldBeAligned(card)) {
 			card->setThreadState();
 			std::thread aligningThread(&CardPlacer::alignCardToBody, this, card);
 			aligningThread.detach();
 		}
 
 		for (auto& card2 : cards) {
-			if (card != card2 && !card->isItInThread() && !card2->isItInThread() && !gameHandler->isMousePressed() && shouldBeMoved(card, card2)) {
+			if (card != card2 && !card->isItInThread() && !card2->isItInThread()/* && !gameHandler->isMousePressed() */ && shouldBeMoved(card, card2)) {
 				card->setThreadState();
 				card2->setThreadState();
 				std::thread movingThread(&CardPlacer::moveCards, this, card, card2);

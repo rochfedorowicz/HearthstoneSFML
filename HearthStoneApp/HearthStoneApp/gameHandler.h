@@ -14,10 +14,11 @@
 
 
 //Enum indicating callback invoked
-enum class CallbacksEnum { TEST_FN, SHUT_DOWN, PLAY_GAME, DISPLAY_MENU};
+enum class CallbacksEnum { TEST_FN, SHUT_DOWN, PLAY_GAME, DISPLAY_MENU, DISPLAY_SETTINGS,
+	CHANGE_RESOLUTION_1920_X_1080, CHANGE_RESOLUTION_1280_X_720};
 
 //Enum indicating current game state
-enum class GameStateEnum { MENU, PLAY, NONE};
+enum class GameStateEnum { MENU, PLAY, SETTINGS, NONE};
 
 //Function pointer
 typedef void (*function)(std::shared_ptr<sf::RenderWindow>);
@@ -58,6 +59,8 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 
 	//Vector of drawables
 	std::vector<std::shared_ptr<Updatable>> interfaceElements, disposeList;
+
+	sf::Vector2i gameResolution;
 
 	//Function for chechikng queue of waiting callbacks
 	void checkCallbacks();

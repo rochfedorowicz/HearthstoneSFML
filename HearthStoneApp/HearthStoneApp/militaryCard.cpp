@@ -8,8 +8,8 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 	health = _health;
 	damage = _damage;
 	mana = _mana;
-	damageLabel = UpdatabText(_position + sf::Vector2f(30, 170), sf::Vector2f(0, 60), MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
-	healthLabel = UpdatabText(_position + sf::Vector2f(120, 170), sf::Vector2f(0, 60), MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	damageLabel = UpdatabText(_position + sf::Vector2f(0.2 * body.getGlobalBounds().width, 0.7 * body.getGlobalBounds().height), sf::Vector2f(0, 0.25 * body.getGlobalBounds().height), MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	healthLabel = UpdatabText(_position + sf::Vector2f(0.8 * body.getGlobalBounds().width, 0.7 * body.getGlobalBounds().height), sf::Vector2f(0, 0.25 * body.getGlobalBounds().height), MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 }
 
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
@@ -37,6 +37,6 @@ bool MilitaryCard::shouldBeDestroyed() {
 
 void MilitaryCard::move(sf::Vector2f _change) {
 	Card::move(_change);
-	damageLabel.positionUpdate(_change + sf::Vector2f(30, 200));
-	healthLabel.positionUpdate(_change + sf::Vector2f(120, 200));
+	damageLabel.positionUpdate(_change + sf::Vector2f(0.2 * body.getGlobalBounds().width, 0.8 * body.getGlobalBounds().height));
+	healthLabel.positionUpdate(_change + sf::Vector2f(0.8 * body.getGlobalBounds().width, 0.8 * body.getGlobalBounds().height));
 }

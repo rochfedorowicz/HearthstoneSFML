@@ -16,11 +16,16 @@ class Card : public Interactive, public std::enable_shared_from_this<Card> {
 	//Logic value indicating if this object should be dragged
 	bool shouldBeDragged;
 
+	//Logic value indicating if this object can be dragged
+	bool canBeDragged;
+
 	//Lagic value indicating if card is inthread
 	bool inThread;
 
 	//Differnce of distance between a grip of mouse and the origin of the card 
 	sf::Vector2f differenceOfDrag;
+
+	sf::Vector2f positionBeforeDrag;
 
 	static std::shared_ptr<Card> currentlyHeldCard;
 
@@ -56,6 +61,12 @@ public:
 
 	//Logic value indicating if this card belongs to player
 	bool playerPosesion;
+
+	sf::Vector2f getPositionBeforeDrag();
+
+	bool getDraggability();
+
+	void changeDraggabilityOfCard();
 
 	//Virtual function used for interaction with cards
 	virtual void interactWithCard(std::shared_ptr<Card> _card) = 0;

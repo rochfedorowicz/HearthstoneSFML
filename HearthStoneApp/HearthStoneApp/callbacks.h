@@ -3,7 +3,7 @@
 #define CALLBACKS
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "gameHandler.h"
+#include "Handlers/gameHandler.h"
 
 //All available callback functions
 namespace callbacks {

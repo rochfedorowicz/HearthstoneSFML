@@ -2,7 +2,7 @@
 #ifndef ROUNDS_HANLDER
 #define ROUNDS_HANDLER
 #include <SFML/Graphics.hpp>
-#include "timer.h"
+#include "../timer.h"
 
 enum class Turn {PLAYERS_TURN, OPPONENTS_TURN};
 

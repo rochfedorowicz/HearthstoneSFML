@@ -2,12 +2,12 @@
 #include "cardPlacer.h"
 #include <thread>
 #include <chrono>
-#include "myHelper.h"
+#include "../myHelper.h"
 
 std::shared_ptr<CardPlacer> CardPlacer::currentlyActivePlaceHolder = std::shared_ptr<CardPlacer>(nullptr);
 
 CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::shared_ptr<GameHandler> _gameHandler)
-	: Interactive(_position, _size, sf::Color::Blue, _gameHandler) {
+	: Interactive(_position, _size, ((_type == CardPlacerType::BATTLE_PLACE_PLAYER || _type == CardPlacerType::HERO_PLACE_PLAYER) ? sf::Color::Blue : sf::Color::Red), _gameHandler) {
 	body = sf::FloatRect(_position, _size);
 	type = _type;
 }
@@ -15,7 +15,7 @@ CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerTyp
 CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::vector<std::shared_ptr<Card>> _initializeCardVector, std::shared_ptr<GameHandler> _gameHandler)
 	: CardPlacer(_position, _size, _type, _gameHandler) {
 	cards = _initializeCardVector;
-	for (auto& card : cards) card->playerPosesion = type == CardPlacerType::BATTLE_PLACE_PLAYER;
+	for (auto& card : cards) card->playerPosesion = (type == CardPlacerType::BATTLE_PLACE_PLAYER || _type == CardPlacerType::HERO_PLACE_PLAYER);
 }
 
 void CardPlacer::addCard(std::shared_ptr<Card> _cardPtr) {
@@ -108,18 +108,17 @@ void CardPlacer::update() {
 
 	if (Card::getCurrentlyHeldCard().get() != nullptr && isCursorHoverdOver() && gameHandler->isMouseReleased() 
 		&& currentlyActivePlaceHolder != shared_from_this()) {
-
 		if ((Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
-				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN && Card::getCurrentlyHeldCard()->getCardType() != CardType::PLAYER)
 				|| (!Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_OPPONENT &&
-				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)) {
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN && Card::getCurrentlyHeldCard()->getCardType() != CardType::PLAYER)) {
 			addCard(Card::getCurrentlyHeldCard());
 			currentlyActivePlaceHolder->removeCard(Card::getCurrentlyHeldCard());
 		}
-		else if ((getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_OPPONENT && 
+		else if (getCardPointedByMouse().get() != nullptr && (((type == CardPlacerType::BATTLE_PLACE_OPPONENT || type == CardPlacerType::HERO_PLACE_OPPONENT) &&
 				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN)
-				|| (getCardPointedByMouse().get() != nullptr && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
-				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN)) {
+				|| ((type == CardPlacerType::BATTLE_PLACE_PLAYER || type == CardPlacerType::HERO_PLACE_PLAYER) &&
+				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN))) {
 			Card::getCurrentlyHeldCard()->interactWithCard(getCardPointedByMouse());
 		}
 	}

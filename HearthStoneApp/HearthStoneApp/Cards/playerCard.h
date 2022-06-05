@@ -3,7 +3,7 @@
 #define PLAYER_CARD
 #include <SFML/Graphics.hpp>
 #include "militaryCard.h"
-#include "playerHandler.h"
+#include "../Handlers/playerHandler.h"
 
 //Class represting player card
 class PlayerCard : public MilitaryCard {

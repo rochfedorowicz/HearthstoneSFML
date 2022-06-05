@@ -2,10 +2,10 @@
 #ifndef BUTTON
 #define BUTTON
 #include <SFML/Graphics.hpp>
-#include "gameHandler.h"
+#include "../Handlers/gameHandler.h"
 #include "interactive.h"
-#include "callbacks.h"
-#include "buttonBlueprint.h"
+#include "../callbacks.h"
+#include "../buttonBlueprint.h"
 
 //Button class compatible with SFML
 class Button : public Interactive {

@@ -7,8 +7,8 @@
 #include <memory>
 #include <queue>
 #include <vector>
-#include "callbacks.h"
-#include "updatable.h"
+#include "../callbacks.h"
+#include "../Interfaces/updatable.h"
 #include "roundsHandler.h"
 #include "playerHandler.h"
 

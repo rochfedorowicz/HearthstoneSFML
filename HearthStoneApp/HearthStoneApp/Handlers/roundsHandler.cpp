@@ -1,6 +1,5 @@
 #pragma once
 #include "roundsHandler.h"
-#include <iostream>
 
 RoundsHandler::RoundsHandler(int _roundsSeconds) {
 	roundsTimer.setMaxSeconds(_roundsSeconds);

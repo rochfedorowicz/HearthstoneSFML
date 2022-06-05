@@ -2,8 +2,8 @@
 #ifndef INTERACTIVE
 #define INTERACTIVE
 #include <SFML/Graphics.hpp>
-#include "gameHandler.h"
-#include "updateableRect.h"
+#include "../Handlers/gameHandler.h"
+#include "../updateableRect.h"
 
 //Class used to implement checking/interactive functions 
 class Interactive : public UpdatableRect{

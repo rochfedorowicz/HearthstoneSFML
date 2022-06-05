@@ -2,8 +2,8 @@
 #ifndef UPDATABLE_TEXT
 #define UPDATABLE_TEXT
 #include <SFML/Graphics.hpp>
-#include "gameHandler.h"
-#include "updatable.h"
+#include "Handlers/gameHandler.h"
+#include "Interfaces/updatable.h"
 
 class UpdatabText: public Updatable {
 
@@ -18,6 +18,9 @@ public:
 	UpdatabText();
 
 	UpdatabText(sf::Vector2f _position, sf::Vector2f _size, std::string _text, std::shared_ptr<sf::Font> _font,
+		sf::Color _fontColor, std::shared_ptr<GameHandler> _gameHandler);
+
+	UpdatabText(sf::Vector2f _position, float _size, std::string _text, std::shared_ptr<sf::Font> _font,
 		sf::Color _fontColor, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Overwritten function from abstact updatable class

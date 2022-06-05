@@ -2,8 +2,8 @@
 #ifndef CARD
 #define CARD
 #include <SFML/Graphics.hpp>
-#include "gameHandler.h"
-#include "interactive.h"
+#include "../Handlers/gameHandler.h"
+#include "../Interactive/interactive.h"
 
 //Enum representing posible card types
 enum class CardType {MILITARY, PLAYER, OTHER};

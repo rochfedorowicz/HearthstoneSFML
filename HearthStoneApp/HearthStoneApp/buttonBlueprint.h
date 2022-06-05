@@ -6,9 +6,8 @@
 //Button blueprint used for easier button constructor calls,
 //it's predefined set of atributes representing particular style
 class ButtonBlueprint {
-
-public:
 	
+public:
 	//Color of button set in blue print
 	sf::Color color;
 
@@ -20,6 +19,7 @@ public:
 
 	//Deafult button's blueprint constructor
 	ButtonBlueprint(sf::Color _color, std::string _fontName, sf::Color _fontColor);
+
 };
 
 //All predefined button blueprints

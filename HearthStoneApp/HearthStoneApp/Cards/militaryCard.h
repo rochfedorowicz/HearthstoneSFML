@@ -2,7 +2,7 @@
 #ifndef MILITARY_CARD
 #define MILITARY_CARD
 #include "card.h"
-#include "updateableText.h"
+#include "../updateableText.h"
 
 //Class representing military card
 class MilitaryCard : public Card {

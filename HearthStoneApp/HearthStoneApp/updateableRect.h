@@ -2,8 +2,8 @@
 #ifndef UPDATABLE_RECT
 #define UPDATABLE_RECT
 #include <SFML/Graphics.hpp>
-#include "gameHandler.h"
-#include "updatable.h"
+#include "Handlers/gameHandler.h"
+#include "Interfaces/updatable.h"
 
 class UpdatableRect : public Updatable {
 protected:

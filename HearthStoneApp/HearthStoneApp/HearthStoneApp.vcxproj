@@ -146,46 +146,54 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="button.cpp" />
+    <ClCompile Include="barBlueprint.cpp" />
+    <ClCompile Include="getValueFunctions.cpp" />
+    <ClCompile Include="Interactive\button.cpp" />
     <ClCompile Include="buttonBlueprint.cpp" />
     <ClCompile Include="callbacks.cpp" />
-    <ClCompile Include="card.cpp" />
-    <ClCompile Include="cardPlacer.cpp" />
-    <ClCompile Include="interactive.cpp" />
-    <ClCompile Include="interactive.h" />
-    <ClCompile Include="gameHandler.cpp" />
+    <ClCompile Include="Cards\card.cpp" />
+    <ClCompile Include="Cards\cardPlacer.cpp" />
+    <ClCompile Include="Handlers\gameHandler.cpp" />
+    <ClCompile Include="Handlers\playerHandler.cpp" />
+    <ClCompile Include="Handlers\roundsHandler.cpp" />
+    <ClCompile Include="Interactive\interactive.cpp" />
+    <ClCompile Include="Interactive\interactive.h" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="militaryCard.cpp" />
+    <ClCompile Include="Cards\militaryCard.cpp" />
     <ClCompile Include="myHelper.cpp" />
-    <ClCompile Include="playerCard.cpp" />
-    <ClCompile Include="playerHandler.cpp" />
-    <ClCompile Include="playerManaBar.cpp" />
-    <ClCompile Include="roundsHandler.cpp" />
-    <ClCompile Include="roundsTimeBar.cpp" />
+    <ClCompile Include="Cards\playerCard.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="updateableBar.cpp" />
     <ClCompile Include="updateableRect.cpp" />
     <ClCompile Include="updateableText.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="button.h" />
+    <ClInclude Include="barBlueprint.h" />
+    <ClInclude Include="getValueFunctions.h" />
+    <ClInclude Include="Interactive\button.h" />
     <ClInclude Include="buttonBlueprint.h" />
     <ClInclude Include="callbacks.h" />
-    <ClInclude Include="card.h" />
-    <ClInclude Include="cardPlacer.h" />
-    <ClInclude Include="gameHandler.h" />
-    <ClInclude Include="militaryCard.h" />
+    <ClInclude Include="Cards\card.h" />
+    <ClInclude Include="Cards\cardPlacer.h" />
+    <ClInclude Include="Handlers\gameHandler.h" />
+    <ClInclude Include="Handlers\playerHandler.h" />
+    <ClInclude Include="Handlers\roundsHandler.h" />
+    <ClInclude Include="Cards\militaryCard.h" />
     <ClInclude Include="myHelper.h" />
-    <ClInclude Include="playerCard.h" />
-    <ClInclude Include="playerHandler.h" />
-    <ClInclude Include="playerManaBar.h" />
-    <ClInclude Include="roundsHandler.h" />
-    <ClInclude Include="roundsTimeBar.h" />
+    <ClInclude Include="Cards\playerCard.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="updatable.h" />
+    <ClInclude Include="Interfaces\updatable.h" />
     <ClInclude Include="updateableBar.h" />
     <ClInclude Include="updateableRect.h" />
     <ClInclude Include="updateableText.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\cardTexture.png" />
+    <Image Include="Textures\cardTextureSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Calibri.ttf" />
+    <Font Include="Fonts\Matura.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

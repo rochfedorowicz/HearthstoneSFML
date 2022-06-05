@@ -1,12 +1,13 @@
 #pragma once
 #include "gameHandler.h"
-#include "button.h"
-#include "card.h"
-#include "cardPlacer.h"
-#include "militaryCard.h"
-#include "playerCard.h"
-#include "playerManaBar.h"
-#include "roundsTimeBar.h"
+#include "../Interactive/button.h"
+#include "../Cards/card.h"
+#include "../Cards/cardPlacer.h"
+#include "../Cards/militaryCard.h"
+#include "../Cards/playerCard.h"
+#include "../updateableBar.h"
+//#include "../playerManaBar.h"
+//#include "../roundsTimeBar.h"
 
 
 GameHandler::GameHandler() {
@@ -30,7 +31,7 @@ bool GameHandler::loadFont(std::string _path, std::string _name) {
 bool GameHandler::loadTexture(std::string _path, std::string _name) {
 	if (textures.find(_name) == textures.end()) {
 		textures[_name] = std::make_shared<sf::Texture>();
-		if (textures[_name]->loadFromFile(_path))
+		if (textures[_name]->loadFromFile(_path)) 
 			return true;
 		else return false;
 	}
@@ -210,9 +211,9 @@ void GameHandler::loadGUIforGamestate() {
 			currentWindowPtr->setPosition(sf::Vector2i(0, 200));
 			while (!interfaceElements.empty()) interfaceElements.pop_back(); {
 				float resolutionCoefficient = gameResolution.x == 1920 ? 1 : 2.0 / 3.0;
-				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resolutionCoefficient * sf::Vector2f(100, 100), textures[(gameResolution.x == 1920 ? "ct" : "ctS")], 40, 3, 10, shared_from_this()),
-					card2 = std::make_shared<MilitaryCard>(resolutionCoefficient * sf::Vector2f(100, 500), textures[(gameResolution.x == 1920 ? "ct" : "ctS")], 100, 1, 10, shared_from_this()),
-					playerCard = std::make_shared<PlayerCard>(resolutionCoefficient * sf::Vector2f(1700, 800), textures[(gameResolution.x == 1920 ? "ct" : "ctS")], player, shared_from_this());
+				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resolutionCoefficient * sf::Vector2f(100, 100), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], 40, 3, 10, shared_from_this()),
+					card2 = std::make_shared<MilitaryCard>(resolutionCoefficient * sf::Vector2f(100, 500), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], 100, 1, 10, shared_from_this()),
+					playerCard = std::make_shared<PlayerCard>(resolutionCoefficient * sf::Vector2f(1700, 800), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], player, shared_from_this());
 				appendDrawable(std::make_shared<UpdatableRect>(resolutionCoefficient * sf::Vector2f(1700, 0), resolutionCoefficient * sf::Vector2f(220, 1080), sf::Color(149, 69, 53), shared_from_this()));
 				appendDrawable(std::make_shared<UpdatableRect>(resolutionCoefficient * sf::Vector2f(0, 900), resolutionCoefficient * sf::Vector2f(1920, 180), sf::Color(149, 69, 53), shared_from_this()));
 				appendDrawable(std::make_shared<UpdatableRect>(resolutionCoefficient * sf::Vector2f(0, 0), resolutionCoefficient * sf::Vector2f(1920, 40), sf::Color(149, 69, 53), shared_from_this()));
@@ -229,8 +230,8 @@ void GameHandler::loadGUIforGamestate() {
 					std::vector<std::shared_ptr<Card>> { card2 }, shared_from_this()));
 				appendDrawable(std::make_shared<CardPlacer>(resolutionCoefficient * sf::Vector2f(1700, 800), resolutionCoefficient * sf::Vector2f(160, 250), CardPlacerType::HERO_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { playerCard }, shared_from_this()));
-				appendDrawable(std::make_shared<PlayerManaBar>(resolutionCoefficient * sf::Vector2f(1740, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, shared_from_this()));
-				appendDrawable(std::make_shared<RoundsTimeBar>(resolutionCoefficient * sf::Vector2f(1830, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, shared_from_this()));
+				appendDrawable(std::make_shared<UpdatableBar>(resolutionCoefficient * sf::Vector2f(1740, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::ROUNDS_TIMER_BAR, shared_from_this()));
+				appendDrawable(std::make_shared<UpdatableBar>(resolutionCoefficient * sf::Vector2f(1830, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR, shared_from_this()));
 				appendDrawable(card);
 				appendDrawable(card2);
 				appendDrawable(playerCard);

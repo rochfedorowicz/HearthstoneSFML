@@ -9,6 +9,10 @@ namespace getValueFunctions {
 
 	int getMaxValueByPlayersMana(std::shared_ptr<GameHandler> _gameHandler);
 
+	int getValueByOpponentsMana(std::shared_ptr<GameHandler> _gameHandler);
+
+	int getMaxValueByOpponentsMana(std::shared_ptr<GameHandler> _gameHandler);
+
 	int getValueByRoundsTimer(std::shared_ptr<GameHandler> _gameHandler);
 
 	int getMaxValueByRoundsTimer(std::shared_ptr<GameHandler> _gameHandler);

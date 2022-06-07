@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="barBlueprint.h" />
+    <ClInclude Include="colorBlueprint.h" />
     <ClInclude Include="getValueFunctions.h" />
     <ClInclude Include="Interactive\button.h" />
     <ClInclude Include="buttonBlueprint.h" />

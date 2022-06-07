@@ -15,6 +15,7 @@ GameHandler::GameHandler() {
 	gameSatate = GameStateEnum::MENU;
 	gameResolution = sf::Vector2i(1920, 1080);
 	player = std::make_shared<PlayerHandler>(10, 10, 100);
+	opponent = std::make_shared<PlayerHandler>(10, 10, 100);
 	roundsHandler = std::make_shared<RoundsHandler>(20);
 }
 
@@ -101,6 +102,7 @@ void GameHandler::manageWindow() {
 		if (gameSatate == GameStateEnum::PLAY && roundsHandler->hasRoundFinished()) {
 			roundsHandler->changeTurn();
 			if (roundsHandler->getTurnOrder() == Turn::PLAYERS_TURN) player->renewMana();
+			else opponent->renewMana();
 			roundsHandler->startRound();
 		}
 
@@ -232,6 +234,7 @@ void GameHandler::loadGUIforGamestate() {
 					std::vector<std::shared_ptr<Card>> { playerCard }, shared_from_this()));
 				appendDrawable(std::make_shared<UpdatableBar>(resolutionCoefficient * sf::Vector2f(1740, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::ROUNDS_TIMER_BAR, shared_from_this()));
 				appendDrawable(std::make_shared<UpdatableBar>(resolutionCoefficient * sf::Vector2f(1830, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR, shared_from_this()));
+				appendDrawable(std::make_shared<UpdatableBar>(resolutionCoefficient * sf::Vector2f(1650, 280), resolutionCoefficient * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR, shared_from_this()));
 				appendDrawable(card);
 				appendDrawable(card2);
 				appendDrawable(playerCard);

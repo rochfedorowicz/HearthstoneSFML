@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include "getValueFunctions.h"
+#include "colorBlueprint.h"
 
 class BarBlueprint {
 
@@ -27,9 +28,13 @@ public:
 
 namespace barBlueprints {
 
-	const BarBlueprint PLAYERS_MANA_BAR = BarBlueprint(sf::Color::Black, sf::Color::Blue,
+	const BarBlueprint PLAYERS_MANA_BAR = BarBlueprint(sf::Color::Black, colorBlueprints::LIGHT_BLUE,
 		std::make_shared<std::function<int(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getValueByPlayersMana),
 		std::make_shared<std::function<int(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getMaxValueByPlayersMana));
+
+	const BarBlueprint OPPONENTS_MANA_BAR = BarBlueprint(sf::Color::Black, colorBlueprints::DARK_BLUE,
+		std::make_shared<std::function<int(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getValueByOpponentsMana),
+		std::make_shared<std::function<int(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getMaxValueByOpponentsMana));
 
 	const BarBlueprint ROUNDS_TIMER_BAR = BarBlueprint(sf::Color::Black, sf::Color::Green,
 		std::make_shared<std::function<int(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getValueByRoundsTimer),

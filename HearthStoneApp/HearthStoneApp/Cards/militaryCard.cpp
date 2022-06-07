@@ -13,7 +13,11 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 }
 
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
-	if ((_card->getCardType() == CardType::MILITARY || _card->getCardType() == CardType::PLAYER) && gameHandler->getPlayerPtr()->consumeMana(mana)) {
+	if ((_card->getCardType() == CardType::MILITARY || _card->getCardType() == CardType::PLAYER) &&
+		((gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN &&
+		gameHandler->getPlayerPtr()->consumeMana(mana)) ||
+		(gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN &&
+		gameHandler->getOpponentPtr()->consumeMana(mana)))) {
 		auto militaryCard2 = UP_CAST(MilitaryCard, _card);
 		militaryCard2->health -= damage;
 	}

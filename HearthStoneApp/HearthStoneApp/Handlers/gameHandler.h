@@ -7,30 +7,19 @@
 #include <memory>
 #include <queue>
 #include <vector>
-#include "../callbacks.h"
+#include <functional>
 #include "../Interfaces/updatable.h"
 #include "roundsHandler.h"
 #include "playerHandler.h"
 
-
-//Enum indicating callback invoked
-enum class CallbacksEnum { TEST_FN, SHUT_DOWN, PLAY_GAME, DISPLAY_MENU, DISPLAY_SETTINGS,
-	CHANGE_RESOLUTION_1920_X_1080, CHANGE_RESOLUTION_1280_X_720};
-
 //Enum indicating current game state
 enum class GameStateEnum { MENU, PLAY, SETTINGS, NONE};
-
-//Function pointer
-typedef void (*function)(std::shared_ptr<sf::RenderWindow>);
 
 //Class used for game handling
 class GameHandler : public std::enable_shared_from_this<GameHandler> {
 
 	//Pointer to current used window
 	std::shared_ptr<sf::RenderWindow> currentWindowPtr;
-
-	//Game state indicating enum
-	GameStateEnum gameSatate;
 
 	//Map of used fonts
 	std::map<std::string, std::shared_ptr<sf::Font>> fonts;
@@ -43,7 +32,7 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	std::shared_ptr<RoundsHandler> roundsHandler;
 
 	//Queue of callbacks
-	std::queue<function> callbacksQueue;
+	std::queue<std::shared_ptr<std::function<void(std::shared_ptr<GameHandler>)>>> callbacksQueue;
 
 	//Mouse position
 	sf::Vector2f mousePosition;
@@ -60,8 +49,6 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	//Vector of drawables
 	std::vector<std::shared_ptr<Updatable>> interfaceElements, disposeList;
 
-	sf::Vector2i gameResolution;
-
 	//Function for chechikng queue of waiting callbacks
 	void checkCallbacks();
 
@@ -69,6 +56,12 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	void loadGUIforGamestate();
 
 public:
+
+	//Game state indicating enum should be private
+	GameStateEnum gameSatate;
+
+	//Should be private tooo!!!!
+	sf::Vector2i gameResolution;
 
 	//Defaul constructor, invoking it creates a window
 	GameHandler();
@@ -101,7 +94,7 @@ public:
 	void manageWindow();
 
 	//Function for chechikng queue of waiting callbacks
-	void queueCallback(CallbacksEnum _functionEnum);
+	void queueCallback(std::shared_ptr<std::function<void(std::shared_ptr<GameHandler>)>> _callback);
 
 	//Function adding new interface element
 	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);

@@ -2,10 +2,34 @@
 #include "callbacks.h"
 
 
-void callbacks::fn(std::shared_ptr<sf::RenderWindow> ptr) {
-    std::cout << " " << 1;
+void callbacks::testFn(std::shared_ptr<GameHandler> _gameHandler) {
+	std::cout << "1 ";
 }
 
-void callbacks::shutDown(std::shared_ptr<sf::RenderWindow> ptr) {
-    ptr->close();
+void callbacks::shutDown(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameSatate = GameStateEnum::NONE;
+	_gameHandler->getWindowPtr()->close();
+}
+
+void callbacks::playGame(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameSatate = GameStateEnum::PLAY;
+	_gameHandler->getWindowPtr()->close();
+}
+
+void callbacks::displayMenu(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameSatate = GameStateEnum::MENU;
+	_gameHandler->getWindowPtr()->close();
+}
+
+void callbacks::displaySettings(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameSatate = GameStateEnum::SETTINGS;
+	_gameHandler->getWindowPtr()->close();
+}
+
+void callbacks::changeResolutionTo1920x1080(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameResolution = sf::Vector2i(1920, 1080);
+}
+
+void callbacks::changeResolutionTo1280x720(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameResolution = sf::Vector2i(1280, 720);
 }

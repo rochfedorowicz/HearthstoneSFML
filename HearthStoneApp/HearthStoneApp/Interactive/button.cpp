@@ -2,7 +2,7 @@
 #include "button.h"
 
 Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std::string _text, 
-	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, CallbacksEnum _callBackFunction,
+	std::shared_ptr<sf::Font> _font, sf::Color _fontColor, std::shared_ptr<std::function<void(std::shared_ptr<GameHandler>)>> _callBackFunction,
 	std::shared_ptr<GameHandler> _gameHandler) : Interactive(_position, _size, _color, _gameHandler) {
 
 	text = sf::Text(_text, *_font, _size.y/2);
@@ -14,10 +14,9 @@ Button::Button(sf::Vector2f _position, sf::Vector2f _size, sf::Color _color, std
 	callBackFunction = _callBackFunction;
 }
 
-Button::Button(sf::Vector2f _position, sf::Vector2f _size, ButtonBlueprint _bluePrint, std::string _text,
-	CallbacksEnum _callBackFunction, std::shared_ptr<GameHandler> _gameHandler)
-	: Button(_position, _size, _bluePrint.color, _text, _gameHandler->getFontPtrByName(_bluePrint.fontName),
-	_bluePrint.fontColor, _callBackFunction, _gameHandler) {};
+Button::Button(sf::Vector2f _position, sf::Vector2f _size, ButtonBlueprint _bluePrint, std::shared_ptr<GameHandler> _gameHandler)
+	: Button(_position, _size, _bluePrint.color, _bluePrint.displayedName, _gameHandler->getFontPtrByName(_bluePrint.fontName),
+	_bluePrint.fontColor, _bluePrint.callbackFunction, _gameHandler) {};
 
 void Button::update() {
 	Interactive::update();
@@ -25,6 +24,6 @@ void Button::update() {
 	gameHandler->getWindowPtr()->draw(text);
 }
 
-void Button::callback() const{
+void Button::callback() {
 	gameHandler->queueCallback(callBackFunction);
 }

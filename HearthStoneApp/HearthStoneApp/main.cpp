@@ -10,25 +10,15 @@
 #include "callbacks.h"
 #include "buttonBlueprint.h"
 
-
 int main() {
 
     std::shared_ptr<GameHandler> gameHandlerPtr = std::make_shared<GameHandler>();
-    auto texturesDir = std::filesystem::current_path();
-    texturesDir += "\\Textures";
-    for (auto const& textureDir : std::filesystem::directory_iterator{ texturesDir })
-    {
-        gameHandlerPtr->loadTexture(textureDir.path().string(), textureDir.path().filename().string().erase(textureDir.path().filename().string().find('.')));
-    }
 
-    texturesDir = std::filesystem::current_path();
-    texturesDir += "\\Fonts";
-    for (auto const& textureDir : std::filesystem::directory_iterator{ texturesDir })
-    {
-        gameHandlerPtr->loadFont(textureDir.path().string(), textureDir.path().filename().string().erase(textureDir.path().filename().string().find('.')));
-    }
+    gameHandlerPtr->getDataHandlerPtr()->loadTextures("Textures");
+
+    gameHandlerPtr->getDataHandlerPtr()->loadFonts("Fonts");
+
     gameHandlerPtr->manageWindow();
-
 
     return 0;
 }

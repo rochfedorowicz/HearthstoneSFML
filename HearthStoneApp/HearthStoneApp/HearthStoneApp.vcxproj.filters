@@ -102,6 +102,9 @@
     <ClCompile Include="barBlueprint.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Handlers\dataHandler.cpp">
+      <Filter>Pliki źródłowe\Handlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="colorBlueprint.h">
       <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Handlers\dataHandler.h">
+      <Filter>Pliki nagłówkowe\Handlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,39 +7,28 @@
 #include "../Cards/playerCard.h"
 #include "../updateableBar.h"
 
-#define ADD_INTERFACE_ELEMENT(type, ...) appendDrawable(std::make_shared<type>(__VA_ARGS__, shared_from_this()))
+#define ADD_RESIZABLE_INTERFACE_ELEMENT(type, resCoeff, posX, posY, sizeX, sizeY, ...) \
+appendDrawable(std::make_shared<type>(resCoeff * sf::Vector2f(posX, posY), resCoeff * sf::Vector2f(sizeX, sizeY),\
+	__VA_ARGS__, shared_from_this()))
+#define ADD_INTERFACE_ELEMENT(type, posX, posY, sizeX, sizeY, ...) ADD_RESIZABLE_INTERFACE_ELEMENT(type,\
+	1.0f, posX, posY, sizeX, sizeY, __VA_ARGS__)
 
 GameHandler::GameHandler() {
 	currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: MENU", sf::Style::Titlebar);
 	gameSatate = GameStateEnum::MENU;
 	gameResolution = sf::Vector2i(1920, 1080);
-	player = std::make_shared<PlayerHandler>(10, 10, 100);
-	opponent = std::make_shared<PlayerHandler>(10, 10, 100);
-	roundsHandler = std::make_shared<RoundsHandler>(20);
-}
-
-bool GameHandler::loadFont(std::string _path, std::string _name) {
-	if (fonts.find(_name) == fonts.end()) {
-		fonts[_name] = std::make_shared<sf::Font>();
-		if (fonts[_name]->loadFromFile(_path))
-			return true;
-		else return false;
-	}
-	else return false;
-}
-
-bool GameHandler::loadTexture(std::string _path, std::string _name) {
-	if (textures.find(_name) == textures.end()) {
-		textures[_name] = std::make_shared<sf::Texture>();
-		if (textures[_name]->loadFromFile(_path)) 
-			return true;
-		else return false;
-	}
-	else return false;
+	playerHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
+	opponentHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
+	roundsHandlerPtr = std::make_shared<RoundsHandler>(20);
+	dataHandlerPtr = std::make_shared<DataHandler>();
 }
 
 std::shared_ptr<sf::Font> GameHandler::getFontPtrByName(std::string _nameOfFont) {
-	return fonts[_nameOfFont];
+	return dataHandlerPtr->getFontPtr(_nameOfFont);
+}
+
+std::shared_ptr<sf::Texture> GameHandler::getTexturePtrByName(std::string _nameOfTexture) {
+	return dataHandlerPtr->getTexturePtr(_nameOfTexture);
 }
 
 std::shared_ptr<sf::RenderWindow> GameHandler::getWindowPtr() {
@@ -98,11 +87,11 @@ void GameHandler::manageWindow() {
 		}
         currentWindowPtr->display();
 
-		if (gameSatate == GameStateEnum::PLAY && roundsHandler->hasRoundFinished()) {
-			roundsHandler->changeTurn();
-			if (roundsHandler->getTurnOrder() == Turn::PLAYERS_TURN) player->renewMana();
-			else opponent->renewMana();
-			roundsHandler->startRound();
+		if (gameSatate == GameStateEnum::PLAY && roundsHandlerPtr->hasRoundFinished()) {
+			roundsHandlerPtr->changeTurn();
+			if (roundsHandlerPtr->getTurnOrder() == Turn::PLAYERS_TURN) playerHandlerPtr->renewMana();
+			else opponentHandlerPtr->renewMana();
+			roundsHandlerPtr->startRound();
 		}
 
 		for (int i = 0; i < disposeList.size(); ++i) {		
@@ -154,44 +143,44 @@ void GameHandler::loadGUIforGamestate() {
 	switch (gameSatate){
 		case GameStateEnum::MENU:
 			while (!interfaceElements.empty()) interfaceElements.pop_back();
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 80), sf::Vector2f(400, 50), buttonBlueprints::PLAY_GAME_BUTTON);
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 180), sf::Vector2f(400, 50), buttonBlueprints::DISPLAY_SETTINGS_BUTTON);
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 280), sf::Vector2f(400, 50), buttonBlueprints::SHUT_DOWN_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 80, 400, 50, buttonBlueprints::PLAY_GAME_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 180, 400, 50, buttonBlueprints::DISPLAY_SETTINGS_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
 			break;
 
 		case GameStateEnum::SETTINGS:
 			while (!interfaceElements.empty()) interfaceElements.pop_back();
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 80), sf::Vector2f(400, 50), buttonBlueprints::CHANGE_RESOLUTION_TO_1920_X_1080_BUTTON);
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 180), sf::Vector2f(400, 50), buttonBlueprints::CHANGE_RESOLUTION_TO_1280_X_720_BUTTON);
-			ADD_INTERFACE_ELEMENT(Button, sf::Vector2f(120, 280), sf::Vector2f(400, 50), buttonBlueprints::DISPLAY_MENU_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 80, 400, 50, buttonBlueprints::CHANGE_RESOLUTION_TO_1920_X_1080_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 180, 400, 50, buttonBlueprints::CHANGE_RESOLUTION_TO_1280_X_720_BUTTON);
+			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::DISPLAY_MENU_BUTTON);
 			break;
 
 		case GameStateEnum::PLAY:
 			while (!interfaceElements.empty()) interfaceElements.pop_back(); {
 				float resCoeff = gameResolution.x == 1920 ? 1 : 2.0 / 3.0;
-				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 100), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], 40, 3, 10, shared_from_this()),
-					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 500), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], 100, 1, 10, shared_from_this()),
-					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(1700, 800), textures[(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall")], player, shared_from_this());
-				ADD_INTERFACE_ELEMENT(UpdatableRect, resCoeff * sf::Vector2f(1700, 0), resCoeff * sf::Vector2f(220, 1080), sf::Color(149, 69, 53));
-				ADD_INTERFACE_ELEMENT(UpdatableRect, resCoeff * sf::Vector2f(0, 900), resCoeff * sf::Vector2f(1920, 180), sf::Color(149, 69, 53));
-				ADD_INTERFACE_ELEMENT(UpdatableRect, resCoeff * sf::Vector2f(0, 0), resCoeff * sf::Vector2f(1920, 40), sf::Color(149, 69, 53));
-				ADD_INTERFACE_ELEMENT(UpdatableRect, resCoeff * sf::Vector2f(0, 0), resCoeff * sf::Vector2f(40, 1080), sf::Color(149, 69, 53));
-				ADD_INTERFACE_ELEMENT(Button, resCoeff * sf::Vector2f(1730, 40), resCoeff * sf::Vector2f(160, 50), buttonBlueprints::TEST_BUTTON);
-				ADD_INTERFACE_ELEMENT(Button, resCoeff * sf::Vector2f(1730, 120), resCoeff * sf::Vector2f(160, 50), buttonBlueprints::DISPLAY_MENU_BUTTON);
-				ADD_INTERFACE_ELEMENT(Button, resCoeff * sf::Vector2f(1730, 200), resCoeff * sf::Vector2f(160, 50), buttonBlueprints::SHUT_DOWN_BUTTON);
-				ADD_INTERFACE_ELEMENT(CardPlacer, resCoeff * sf::Vector2f(100, 100), resCoeff * sf::Vector2f(1500, 300), CardPlacerType::BATTLE_PLACE_PLAYER,
+				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 100), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 40, 3, 10, shared_from_this()),
+					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 500), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
+					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(1700, 800), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), playerHandlerPtr, shared_from_this());
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 1700, 0, 220, 1080, colorBlueprints::BACKGROUND_BROWN);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 900, 1920, 180, colorBlueprints::BACKGROUND_BROWN);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 0, 1920, 40, colorBlueprints::BACKGROUND_BROWN);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 0, 40, 1080, colorBlueprints::BACKGROUND_BROWN);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 40, 160, 50, buttonBlueprints::TEST_BUTTON);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 120, 160, 50, buttonBlueprints::DISPLAY_MENU_BUTTON);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 200, 160, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 100, 100, 1500, 300, CardPlacerType::BATTLE_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { card });
-				ADD_INTERFACE_ELEMENT(CardPlacer, resCoeff * sf::Vector2f(100, 500), resCoeff * sf::Vector2f(1500, 300), CardPlacerType::BATTLE_PLACE_OPPONENT,
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 100, 500, 1500, 300, CardPlacerType::BATTLE_PLACE_OPPONENT,
 					std::vector<std::shared_ptr<Card>> { card2 });
-				ADD_INTERFACE_ELEMENT(CardPlacer, resCoeff * sf::Vector2f(1700, 800), resCoeff * sf::Vector2f(160, 250), CardPlacerType::HERO_PLACE_PLAYER,
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 1700, 800, 160, 250, CardPlacerType::HERO_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { playerCard });
-				ADD_INTERFACE_ELEMENT(UpdatableBar, resCoeff * sf::Vector2f(1740, 280), resCoeff * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::ROUNDS_TIMER_BAR);
-				ADD_INTERFACE_ELEMENT(UpdatableBar, resCoeff * sf::Vector2f(1830, 280), resCoeff * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
-				ADD_INTERFACE_ELEMENT(UpdatableBar, resCoeff * sf::Vector2f(1650, 280), resCoeff * sf::Vector2f(60, 500), BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1740, 280, 60, 500, BarType::VERTICAL, barBlueprints::ROUNDS_TIMER_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1830, 280, 60, 500, BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1650, 280, 60, 500, BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
 				appendDrawable(card);
 				appendDrawable(card2);
 				appendDrawable(playerCard);
-				roundsHandler->startRound();
+				roundsHandlerPtr->startRound();
 			}
 			break;
 
@@ -201,13 +190,17 @@ void GameHandler::loadGUIforGamestate() {
 
 
 std::shared_ptr<PlayerHandler> GameHandler::getPlayerPtr() {
-	return player;
+	return playerHandlerPtr;
 }
 
 std::shared_ptr<PlayerHandler> GameHandler::getOpponentPtr() {
-	return opponent;
+	return opponentHandlerPtr;
 }
 
 std::shared_ptr<RoundsHandler> GameHandler::getRoundHandlerPtr() {
-	return roundsHandler;
+	return roundsHandlerPtr;
+}
+
+std::shared_ptr<DataHandler> GameHandler::getDataHandlerPtr() {
+	return dataHandlerPtr;
 }

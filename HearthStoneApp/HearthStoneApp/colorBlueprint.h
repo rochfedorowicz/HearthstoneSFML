@@ -11,5 +11,7 @@ namespace colorBlueprints {
 
 	const sf::Color BUTTON_BEIGE = sf::Color(225, 186, 102);
 
+	const sf::Color BACKGROUND_BROWN = sf::Color(149, 69, 53);
+
 }
 #endif

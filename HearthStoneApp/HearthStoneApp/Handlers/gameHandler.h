@@ -2,7 +2,6 @@
 #ifndef GAME_HANDLER
 #define GAME_HANDLER
 #include <SFML/Graphics.hpp>
-#include <map>
 #include <string>
 #include <memory>
 #include <queue>
@@ -11,6 +10,7 @@
 #include "../Interfaces/updatable.h"
 #include "roundsHandler.h"
 #include "playerHandler.h"
+#include "dataHandler.h"
 
 //Enum indicating current game state
 enum class GameStateEnum { MENU, PLAY, SETTINGS, NONE};
@@ -21,15 +21,11 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	//Pointer to current used window
 	std::shared_ptr<sf::RenderWindow> currentWindowPtr;
 
-	//Map of used fonts
-	std::map<std::string, std::shared_ptr<sf::Font>> fonts;
+	std::shared_ptr<PlayerHandler> playerHandlerPtr, opponentHandlerPtr;
 
-	//Map of used texture
-	std::map<std::string, std::shared_ptr<sf::Texture>> textures;
+	std::shared_ptr<RoundsHandler> roundsHandlerPtr;
 
-	std::shared_ptr<PlayerHandler> player, opponent;
-
-	std::shared_ptr<RoundsHandler> roundsHandler;
+	std::shared_ptr<DataHandler> dataHandlerPtr;
 
 	//Queue of callbacks
 	std::queue<std::shared_ptr<std::function<void(std::shared_ptr<GameHandler>)>>> callbacksQueue;
@@ -66,14 +62,11 @@ public:
 	//Defaul constructor, invoking it creates a window
 	GameHandler();
 
-	//Function that allows to load font from file
-	bool loadFont(std::string _path, std::string _name);
-
-	//Function that allows to load texture from file
-	bool loadTexture(std::string _path, std::string _name);
-
 	//Font getter 
 	std::shared_ptr<sf::Font> getFontPtrByName(std::string _nameOfFont);
+
+	//Texture getter 
+	std::shared_ptr<sf::Texture> getTexturePtrByName(std::string _nameOfTexture);
 
 	//Current window pointer getter
 	std::shared_ptr<sf::RenderWindow> getWindowPtr();
@@ -104,6 +97,8 @@ public:
 	std::shared_ptr<PlayerHandler> getOpponentPtr();
 
 	std::shared_ptr<RoundsHandler> getRoundHandlerPtr();
+
+	std::shared_ptr<DataHandler> getDataHandlerPtr();
 };
 #endif
 

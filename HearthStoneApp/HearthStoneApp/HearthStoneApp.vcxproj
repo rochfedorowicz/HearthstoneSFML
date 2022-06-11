@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="barBlueprint.cpp" />
     <ClCompile Include="getValueFunctions.cpp" />
+    <ClCompile Include="Handlers\dataHandler.cpp" />
     <ClCompile Include="Interactive\button.cpp" />
     <ClCompile Include="buttonBlueprint.cpp" />
     <ClCompile Include="callbacks.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="barBlueprint.h" />
     <ClInclude Include="colorBlueprint.h" />
     <ClInclude Include="getValueFunctions.h" />
+    <ClInclude Include="Handlers\dataHandler.h" />
     <ClInclude Include="Interactive\button.h" />
     <ClInclude Include="buttonBlueprint.h" />
     <ClInclude Include="callbacks.h" />

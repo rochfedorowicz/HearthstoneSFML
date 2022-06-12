@@ -105,6 +105,12 @@
     <ClCompile Include="Handlers\dataHandler.cpp">
       <Filter>Pliki źródłowe\Handlers</Filter>
     </ClCompile>
+    <ClCompile Include="updatableSprite.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="selfUpdatableText.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h">
@@ -167,12 +173,21 @@
     <ClInclude Include="Handlers\dataHandler.h">
       <Filter>Pliki nagłówkowe\Handlers</Filter>
     </ClInclude>
+    <ClInclude Include="updatableSprite.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="selfUpdatableText.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\cardTexture.png">
       <Filter>Pliki zasobów\Textures</Filter>
     </Image>
     <Image Include="Textures\cardTextureSmall.png">
+      <Filter>Pliki zasobów\Textures</Filter>
+    </Image>
+    <Image Include="Textures\background.png">
       <Filter>Pliki zasobów\Textures</Filter>
     </Image>
   </ItemGroup>

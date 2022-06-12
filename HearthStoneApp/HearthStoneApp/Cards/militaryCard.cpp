@@ -8,8 +8,8 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 	health = _health;
 	damage = _damage;
 	mana = _mana;
-	damageLabel = UpdatabText(_position + sf::Vector2f(0.2 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
-	healthLabel = UpdatabText(_position + sf::Vector2f(0.8 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	damageLabel = UpdatableText(_position + sf::Vector2f(0.2 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	healthLabel = UpdatableText(_position + sf::Vector2f(0.8 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 }
 
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {

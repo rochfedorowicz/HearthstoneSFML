@@ -23,5 +23,7 @@ namespace callbacks {
 	void changeResolutionTo1920x1080(std::shared_ptr<GameHandler> _gameHandler);
 
 	void changeResolutionTo1280x720(std::shared_ptr<GameHandler> _gameHandler);
+
+	void skipRound(std::shared_ptr<GameHandler> _gameHandler);
 }
 #endif

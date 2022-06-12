@@ -8,7 +8,7 @@
 class MilitaryCard : public Card {
 	
 	//Lables used to display card statistics
-	UpdatabText damageLabel, healthLabel;
+	UpdatableText damageLabel, healthLabel;
 
 protected:
 

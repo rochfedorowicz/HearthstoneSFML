@@ -20,6 +20,8 @@ public:
 
 	void startRound();
 
+	void restartRound();
+
 	int getMaxSecondsInRound();
 
 	int getCurrentSecondsInRound();

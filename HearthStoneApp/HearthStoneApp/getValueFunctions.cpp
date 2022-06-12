@@ -23,3 +23,7 @@ int getValueFunctions::getValueByRoundsTimer(std::shared_ptr<GameHandler> _gameH
 int getValueFunctions::getMaxValueByRoundsTimer(std::shared_ptr<GameHandler> _gameHandler) {
     return _gameHandler->getRoundHandlerPtr()->getMaxSecondsInRound();
 }
+
+std::string getValueFunctions::getRoundsOwner(std::shared_ptr<GameHandler> _gameHandler) {
+    return (_gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN ? "player's turn" : "opponent's turn");
+}

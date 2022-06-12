@@ -58,5 +58,9 @@ namespace buttonBlueprints {
 	const ButtonBlueprint CHANGE_RESOLUTION_TO_1280_X_720_BUTTON = ButtonBlueprint("Change resolution to 1280x720",
 		colorBlueprints::BUTTON_BEIGE, "Matura", sf::Color::Black,
 		std::make_shared<std::function<void(std::shared_ptr<GameHandler>)>>(&callbacks::changeResolutionTo1280x720));
+
+	const ButtonBlueprint SKIP_ROUND_BUTTON = ButtonBlueprint("Skip round",
+		colorBlueprints::BUTTON_BEIGE, "Matura", sf::Color::Black,
+		std::make_shared<std::function<void(std::shared_ptr<GameHandler>)>>(&callbacks::skipRound));
 }
 #endif

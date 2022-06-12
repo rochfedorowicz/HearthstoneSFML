@@ -163,7 +163,9 @@
     <ClCompile Include="Cards\militaryCard.cpp" />
     <ClCompile Include="myHelper.cpp" />
     <ClCompile Include="Cards\playerCard.cpp" />
+    <ClCompile Include="selfUpdatableText.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="updatableSprite.cpp" />
     <ClCompile Include="updateableBar.cpp" />
     <ClCompile Include="updateableRect.cpp" />
     <ClCompile Include="updateableText.cpp" />
@@ -184,13 +186,16 @@
     <ClInclude Include="Cards\militaryCard.h" />
     <ClInclude Include="myHelper.h" />
     <ClInclude Include="Cards\playerCard.h" />
+    <ClInclude Include="selfUpdatableText.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="Interfaces\updatable.h" />
+    <ClInclude Include="updatableSprite.h" />
     <ClInclude Include="updateableBar.h" />
     <ClInclude Include="updateableRect.h" />
     <ClInclude Include="updateableText.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Textures\background.png" />
     <Image Include="Textures\cardTexture.png" />
     <Image Include="Textures\cardTextureSmall.png" />
   </ItemGroup>

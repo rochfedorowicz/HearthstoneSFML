@@ -33,3 +33,10 @@ void callbacks::changeResolutionTo1920x1080(std::shared_ptr<GameHandler> _gameHa
 void callbacks::changeResolutionTo1280x720(std::shared_ptr<GameHandler> _gameHandler) {
 	_gameHandler->gameResolution = sf::Vector2i(1280, 720);
 }
+
+void callbacks::skipRound(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->getRoundHandlerPtr()->changeTurn();
+	if (_gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN) _gameHandler-> getPlayerPtr()->renewMana();
+	else _gameHandler->getOpponentPtr()->renewMana();
+	_gameHandler->getRoundHandlerPtr()->restartRound();
+}

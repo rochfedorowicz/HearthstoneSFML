@@ -19,6 +19,10 @@ void RoundsHandler::startRound() {
 	roundsTimer.start();
 }
 
+void RoundsHandler::restartRound() {
+	roundsTimer.restart();
+}
+
 bool RoundsHandler::hasRoundFinished() {
 	return roundsTimer.finished();
 }

@@ -6,6 +6,9 @@
 #include "../Cards/militaryCard.h"
 #include "../Cards/playerCard.h"
 #include "../updateableBar.h"
+#include "../updatableSprite.h"
+#include "../updateableText.h"
+#include "../selfUpdatableText.h"
 
 #define ADD_RESIZABLE_INTERFACE_ELEMENT(type, resCoeff, posX, posY, sizeX, sizeY, ...) \
 appendDrawable(std::make_shared<type>(resCoeff * sf::Vector2f(posX, posY), resCoeff * sf::Vector2f(sizeX, sizeY),\
@@ -158,28 +161,36 @@ void GameHandler::loadGUIforGamestate() {
 		case GameStateEnum::PLAY:
 			while (!interfaceElements.empty()) interfaceElements.pop_back(); {
 				float resCoeff = gameResolution.x == 1920 ? 1 : 2.0 / 3.0;
-				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 100), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 40, 3, 10, shared_from_this()),
-					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(100, 500), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
-					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(1700, 800), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), playerHandlerPtr, shared_from_this());
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 1700, 0, 220, 1080, colorBlueprints::BACKGROUND_BROWN);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 900, 1920, 180, colorBlueprints::BACKGROUND_BROWN);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 0, 1920, 40, colorBlueprints::BACKGROUND_BROWN);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableRect, resCoeff, 0, 0, 40, 1080, colorBlueprints::BACKGROUND_BROWN);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 40, 160, 50, buttonBlueprints::TEST_BUTTON);
+				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 130), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 40, 3, 10, shared_from_this()),
+					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 560), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
+					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 745), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), playerHandlerPtr, shared_from_this()),
+					opponentsCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 125), getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), playerHandlerPtr, shared_from_this());
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 260, 40, 1420, 60, BarType::HORIZONTAL, barBlueprints::ROUNDS_TIMER_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1830, 360, 60, 630, BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1730, 360, 60, 630, BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 130, 1400, 410, CardPlacerType::BATTLE_PLACE_OPPONENT,
+					std::vector<std::shared_ptr<Card>> { card });
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 560, 1400, 410, CardPlacerType::BATTLE_PLACE_PLAYER,
+					std::vector<std::shared_ptr<Card>> { card2 });
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableSprite, resCoeff, 0, 0, 1920, 1080, "background");
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 745, 160, 250, CardPlacerType::HERO_PLACE_PLAYER,
+					std::vector<std::shared_ptr<Card>> { playerCard });
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 125, 160, 250, CardPlacerType::HERO_PLACE_OPPONENT,
+					std::vector<std::shared_ptr<Card>> { opponentsCard });
+				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 40, 160, 50, buttonBlueprints::SKIP_ROUND_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 120, 160, 50, buttonBlueprints::DISPLAY_MENU_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 200, 160, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 100, 100, 1500, 300, CardPlacerType::BATTLE_PLACE_PLAYER,
-					std::vector<std::shared_ptr<Card>> { card });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 100, 500, 1500, 300, CardPlacerType::BATTLE_PLACE_OPPONENT,
-					std::vector<std::shared_ptr<Card>> { card2 });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 1700, 800, 160, 250, CardPlacerType::HERO_PLACE_PLAYER,
-					std::vector<std::shared_ptr<Card>> { playerCard });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1740, 280, 60, 500, BarType::VERTICAL, barBlueprints::ROUNDS_TIMER_BAR);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1830, 280, 60, 500, BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1650, 280, 60, 500, BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 280, 160, 50, buttonBlueprints::TEST_BUTTON);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 280, -10, 200, 60, "Rounds timer", getFontPtrByName("Matura"), sf::Color::Black);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 10, 490, 230, 100, "It is", getFontPtrByName("Matura"), sf::Color::Black);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(SelfUpdatableText, resCoeff, 0, 550, 280, 70, "player's turn", getFontPtrByName("Matura"), sf::Color::Black,
+					std::make_shared<std::function<std::string(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getRoundsOwner));
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1710, 850, 200, 60, "Player's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1610, 840, 200, 60, "Opponent's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
 				appendDrawable(card);
 				appendDrawable(card2);
 				appendDrawable(playerCard);
+				appendDrawable(opponentsCard);
 				roundsHandlerPtr->startRound();
 			}
 			break;

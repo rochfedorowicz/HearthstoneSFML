@@ -6,15 +6,11 @@
 #include <memory>
 #include "militaryCard.h"
 
-enum class CardPlacerType {BATTLE_PLACE_PLAYER, BATTLE_PLACE_OPPONENT, HERO_PLACE_PLAYER, HERO_PLACE_OPPONENT};
+enum class CardPlacerType {BATTLE_PLACE_PLAYER, BATTLE_PLACE_OPPONENT, HERO_PLACE_PLAYER, HERO_PLACE_OPPONENT, SLIDER};
 
 class CardPlacer : public Interactive, public std::enable_shared_from_this<CardPlacer> {
-	
-	sf::FloatRect body;
 
-	std::vector<std::shared_ptr<Card>> cards, disposeList;
-
-	void update();
+	std::vector<std::shared_ptr<Card>> disposeList;
 
 	bool shouldBeAligned(std::shared_ptr<Card> _card);
 
@@ -26,11 +22,17 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 	bool doesCardBelongsToPlacer(std::shared_ptr<Card> _card);
 
-	void removeCard(std::shared_ptr<Card> _cardPtr);
-
 	CardPlacerType type;
 
 	std::shared_ptr<Card> getCardPointedByMouse();
+
+protected:
+
+	std::vector<std::shared_ptr<Card>> cards;
+
+	void move(sf::Vector2f _moveVector);
+
+	virtual void removeCard(std::shared_ptr<Card> _cardPtr);
 
 public:
 
@@ -41,6 +43,8 @@ public:
 	void addCard(std::shared_ptr<Card> _cardPtr);
 
 	static std::shared_ptr<CardPlacer> currentlyActivePlaceHolder;
+
+	void update();
 
 };
 #endif

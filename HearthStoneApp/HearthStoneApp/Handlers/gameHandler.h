@@ -43,7 +43,7 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	bool mouseReleased;
 
 	//Vector of drawables
-	std::vector<std::shared_ptr<Updatable>> interfaceElements, disposeList;
+	std::vector<std::shared_ptr<Updatable>> interfaceElements, cards, disposeList, disposeCardList;
 
 	//Function for chechikng queue of waiting callbacks
 	void checkCallbacks();
@@ -52,6 +52,8 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	void loadGUIforGamestate();
 
 public:
+
+	bool hasJustFinished;
 
 	//Game state indicating enum should be private
 	GameStateEnum gameSatate;
@@ -91,6 +93,10 @@ public:
 
 	//Function adding new interface element
 	void appendDrawable(std::shared_ptr<Updatable> _updatablePtr);
+
+	void appendCard(std::shared_ptr<Updatable> _updatablePtr);
+
+	void disposeCard(std::shared_ptr<Updatable> _updatablePtr);
 
 	std::shared_ptr<PlayerHandler> getPlayerPtr();
 

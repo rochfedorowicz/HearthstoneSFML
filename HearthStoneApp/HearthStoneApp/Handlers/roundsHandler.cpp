@@ -22,7 +22,6 @@ void RoundsHandler::startRound() {
 void RoundsHandler::restartRound() {
 	roundsTimer.restart();
 }
-
 bool RoundsHandler::hasRoundFinished() {
 	return roundsTimer.finished();
 }

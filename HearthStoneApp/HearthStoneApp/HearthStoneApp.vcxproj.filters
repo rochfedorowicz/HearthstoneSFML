@@ -111,6 +111,9 @@
     <ClCompile Include="selfUpdatableText.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Cards\slideableCardPlacer.cpp">
+      <Filter>Pliki źródłowe\Cards</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="selfUpdatableText.h">
       <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Cards\slideableCardPlacer.h">
+      <Filter>Pliki nagłówkowe\Cards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

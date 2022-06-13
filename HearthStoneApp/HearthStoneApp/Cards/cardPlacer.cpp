@@ -8,7 +8,6 @@ std::shared_ptr<CardPlacer> CardPlacer::currentlyActivePlaceHolder = std::shared
 
 CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerType _type, std::shared_ptr<GameHandler> _gameHandler)
 	: Interactive(_position, _size, ((_type == CardPlacerType::BATTLE_PLACE_PLAYER || _type == CardPlacerType::HERO_PLACE_PLAYER) ? sf::Color::Blue : sf::Color::Red), _gameHandler) {
-	body = sf::FloatRect(_position, _size);
 	type = _type;
 }
 
@@ -27,7 +26,7 @@ void CardPlacer::addCard(std::shared_ptr<Card> _cardPtr) {
 bool CardPlacer::shouldBeAligned(std::shared_ptr<Card> _card) {
 	int amount = 0;
 	for (auto& corner : _card->getCardCorners()) {
-		if (body.contains(corner)) ++amount;;
+		if (body.getGlobalBounds().contains(corner)) ++amount;;
 	}
 	if (amount >= 4) {
 		if (!_card->getDraggability()) _card->changeDraggabilityOfCard();
@@ -124,14 +123,14 @@ void CardPlacer::update() {
 	}
 
 	for (auto& card : cards) {
-		if (!card->isItInThread() /* && !gameHandler->isMousePressed()*/ && shouldBeAligned(card)) {
+		if (!card->isItInThread() && shouldBeAligned(card)) {
 			card->setThreadState();
 			std::thread aligningThread(&CardPlacer::alignCardToBody, this, card);
 			aligningThread.detach();
 		}
 
 		for (auto& card2 : cards) {
-			if (card != card2 && !card->isItInThread() && !card2->isItInThread()/* && !gameHandler->isMousePressed() */ && shouldBeMoved(card, card2)) {
+			if (card != card2 && !card->isItInThread() && !card2->isItInThread() && shouldBeMoved(card, card2)) {
 				card->setThreadState();
 				card2->setThreadState();
 				std::thread movingThread(&CardPlacer::moveCards, this, card, card2);
@@ -173,4 +172,10 @@ std::shared_ptr<Card> CardPlacer::getCardPointedByMouse() {
 	for (auto& card : cards)
 		if (card->getBounds().contains(gameHandler->getMousePosition())) return card;
 	return std::shared_ptr<Card>(nullptr);
+}
+
+void CardPlacer::move(sf::Vector2f _moveVector) {
+	for (auto& card : cards)
+		card->move(card->getCardCorners()[0] + _moveVector);
+	body.setPosition(body.getPosition() + _moveVector);
 }

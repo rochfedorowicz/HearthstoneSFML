@@ -39,4 +39,5 @@ void callbacks::skipRound(std::shared_ptr<GameHandler> _gameHandler) {
 	if (_gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN) _gameHandler-> getPlayerPtr()->renewMana();
 	else _gameHandler->getOpponentPtr()->renewMana();
 	_gameHandler->getRoundHandlerPtr()->restartRound();
+	_gameHandler->hasJustFinished = true;
 }

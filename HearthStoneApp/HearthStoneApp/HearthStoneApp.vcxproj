@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="barBlueprint.cpp" />
+    <ClCompile Include="Cards\slideableCardPlacer.cpp" />
     <ClCompile Include="getValueFunctions.cpp" />
     <ClCompile Include="Handlers\dataHandler.cpp" />
     <ClCompile Include="Interactive\button.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="barBlueprint.h" />
+    <ClInclude Include="Cards\slideableCardPlacer.h" />
     <ClInclude Include="colorBlueprint.h" />
     <ClInclude Include="getValueFunctions.h" />
     <ClInclude Include="Handlers\dataHandler.h" />

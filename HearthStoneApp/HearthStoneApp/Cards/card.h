@@ -27,13 +27,15 @@ class Card : public Interactive, public std::enable_shared_from_this<Card> {
 
 	static std::shared_ptr<Card> currentlyHeldCard;
 
-public:
-	
-	//Should be private
 	sf::Vector2f positionBeforeDrag;
 
 	//Texture of a card
 	sf::Sprite texture;
+
+	//Logic value indicating if this card belongs to player
+	bool playerPosesion;
+
+public:
 
 	//Deafult card constructor
 	Card(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, std::shared_ptr<GameHandler> _gameHandler);
@@ -50,7 +52,6 @@ public:
 	//Getter for currently held card
 	static std::shared_ptr<Card> getCurrentlyHeldCard();
 
-
 	//Function moving object (generally update its poistion)
 	virtual void move(sf::Vector2f _change);
 
@@ -60,14 +61,17 @@ public:
 	//Setter changing logic state of isInThread value to opposite to current
 	void setThreadState();
 
-	//Logic value indicating if this card belongs to player
-	bool playerPosesion;
-
 	sf::Vector2f getPositionBeforeDrag();
+
+	void setPositionBeforeDrag(sf::Vector2f _newPosition);
 
 	bool getDraggability();
 
 	void changeDraggabilityOfCard();
+
+	bool isPossesedByPlayer();
+
+	void setPlayerPossesion(bool _newValue);
 
 	//Virtual function used for interaction with cards
 	virtual void interactWithCard(std::shared_ptr<Card> _card) = 0;

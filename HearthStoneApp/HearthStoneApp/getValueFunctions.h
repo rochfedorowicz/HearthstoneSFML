@@ -18,6 +18,8 @@ namespace getValueFunctions {
 	int getMaxValueByRoundsTimer(std::shared_ptr<GameHandler> _gameHandler);
 
 	std::string getRoundsOwner(std::shared_ptr<GameHandler> _gameHandler);
+
+	std::string getRoundsWinner(std::shared_ptr<GameHandler> _gameHandler);
 }
 
 #endif

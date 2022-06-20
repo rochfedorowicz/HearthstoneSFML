@@ -21,6 +21,8 @@ class DataHandler {
 	//Function that allows to load texture from file
 	bool loadTexture(std::string _path, std::string _name);
 
+	sf::Vector2i loadedTexturesResolution;
+
 public:
 
 	DataHandler();
@@ -35,6 +37,6 @@ public:
 
 	bool loadFonts(std::string _folderName);
 
-	sf::Vector2i loadedTexturesResolution;
+	sf::Vector2i getLoadedTexturesResolution();
 };
 #endif

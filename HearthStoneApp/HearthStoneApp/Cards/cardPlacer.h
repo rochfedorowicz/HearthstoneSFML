@@ -16,8 +16,6 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 	void alignCardToBody(std::shared_ptr<Card> _card);
 
-	bool shouldBeMoved(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2);
-
 	void moveCards(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2);
 
 	bool doesCardBelongsToPlacer(std::shared_ptr<Card> _card);
@@ -30,11 +28,17 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 protected:
 
+	bool shouldBeMoved(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2);
+
 	std::vector<std::shared_ptr<Card>> cards;
 
 	virtual void move(sf::Vector2f _moveVector);
 
 	virtual void removeCard(std::shared_ptr<Card> _cardPtr);
+
+	static std::shared_ptr<CardPlacer> currentlyActivePlaceHolder;
+
+	static size_t numberOfCurrentlyPointedPlaceHolders;
 
 public:
 
@@ -44,13 +48,13 @@ public:
 
 	void addCard(std::shared_ptr<Card> _cardPtr);
 
-	static std::shared_ptr<CardPlacer> currentlyActivePlaceHolder;
-
-	static size_t numberOfCurrentlyPointedPlaceHolders;
-
 	void update();
 
 	bool shouldBeDestroyed();
+
+	static std::shared_ptr<CardPlacer> getCurrentlyActivePlaceHolder();
+
+	static size_t getNumberOfCurrentlyPointedPlaceHolders();
 
 };
 #endif

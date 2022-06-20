@@ -25,8 +25,8 @@ void WrittingField::update() {
 	if (isItClicked() && !isActive) isActive = true;
 	else if (gameHandler->isMousePressed() && !isCursorHoverdOver() && isActive) isActive = false;
 	if (isActive) {
-		if (gameHandler->wasKeyPressed) {
-			if (gameHandler->wasEnterPressed) {
+		if (gameHandler->wasAnyKeyPressed()) {
+			if (gameHandler->wasEnterKeyPressed()) {
 				std::smatch m;
 				std::string content = static_cast<std::string>(textToDisplay.getContent());
 				if (std::regex_match(content, m, regex)) {
@@ -35,10 +35,10 @@ void WrittingField::update() {
 					*storePointer = content;
 				}
 			}
-			else if (gameHandler->wasBackspacePressed)
+			else if (gameHandler->wasBackspaceKeyPressed())
 				deleteLastCharacter();
 			else if (textToDisplay.getContent().getSize() < maxLength)
-				attemptToAppend(gameHandler->enteredText);
+				attemptToAppend(gameHandler->getEnteredText());
 		}
 	}
 	gameHandler->getWindowPtr()->draw(body);

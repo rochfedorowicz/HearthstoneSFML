@@ -9,6 +9,7 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 	damage = _damage;
 	mana = _mana;
 	damageLabel = UpdatableText(_position + sf::Vector2f(0.2 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(damage), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
+	manaLabel = UpdatableText(_position + sf::Vector2f(0.5 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(mana), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 	healthLabel = UpdatableText(_position + sf::Vector2f(0.8 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 }
 
@@ -24,6 +25,10 @@ void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
 		gameHandler->getOpponentPtr()->consumeMana(mana)))) {
 		auto militaryCard2 = UP_CAST(MilitaryCard, _card);
 		militaryCard2->health -= damage;
+		if (_card->getCardType() == CardType::PLAYER) {
+			if (_card->isPossesedByPlayer()) gameHandler->getPlayerPtr()->dealDamage(damage);
+			else gameHandler->getOpponentPtr()->dealDamage(damage);
+		}
 	}
 }
 
@@ -32,6 +37,7 @@ void MilitaryCard::update() {
 	damageLabel.contentUpdate(MyHelper::convertIntToString(damage));
 	healthLabel.contentUpdate(MyHelper::convertIntToString(health));
 	damageLabel.update();
+	manaLabel.update();
 	healthLabel.update();
 	move(body.getPosition());
 }
@@ -47,5 +53,6 @@ bool MilitaryCard::shouldBeDestroyed() {
 void MilitaryCard::move(sf::Vector2f _change) {
 	Card::move(_change);
 	damageLabel.positionUpdate(_change + sf::Vector2f(0.2 * body.getSize().x, 0.85 * body.getSize().y));
+	manaLabel.positionUpdate(_change + sf::Vector2f(0.5 * body.getSize().x, 0.85 * body.getSize().y));
 	healthLabel.positionUpdate(_change + sf::Vector2f(0.8 * body.getSize().x, 0.85 * body.getSize().y));
 }

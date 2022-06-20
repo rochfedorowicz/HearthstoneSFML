@@ -34,7 +34,6 @@ Card::Card(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, std::s
 void Card::move(sf::Vector2f _change) {
 	body.setPosition(_change);
 	texture.setPosition(_change);
-	
 }
 
 std::vector<sf::Vector2f> Card::getCardCorners() {
@@ -62,10 +61,22 @@ sf::Vector2f Card::getPositionBeforeDrag() {
 	return positionBeforeDrag;
 }
 
+void Card::setPositionBeforeDrag(sf::Vector2f _newPosition) {
+	positionBeforeDrag = _newPosition;
+}
+
 bool Card::getDraggability() {
 	return canBeDragged;
 }
 
 void Card::changeDraggabilityOfCard() {
 	canBeDragged = canBeDragged == true ? false : true;
+}
+
+bool Card::isPossesedByPlayer() {
+	return playerPosesion;
+}
+
+void Card::setPlayerPossesion(bool _newValue) {
+	playerPosesion = _newValue;
 }

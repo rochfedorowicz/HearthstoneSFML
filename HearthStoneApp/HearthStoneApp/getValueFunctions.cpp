@@ -29,3 +29,9 @@ std::string getValueFunctions::getRoundsOwner(std::shared_ptr<GameHandler> _game
         return *_gameHandler->getPlayerPtr()->getPointerToName();
     else return *_gameHandler->getOpponentPtr()->getPointerToName();
 }
+
+std::string getValueFunctions::getRoundsWinner(std::shared_ptr<GameHandler> _gameHandler) {
+    if (_gameHandler->getPlayerPtr()->getHealth() == 0)
+        return *_gameHandler->getOpponentPtr()->getPointerToName();
+    else return *_gameHandler->getPlayerPtr()->getPointerToName();
+}

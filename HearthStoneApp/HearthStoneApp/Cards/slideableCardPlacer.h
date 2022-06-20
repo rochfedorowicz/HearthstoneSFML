@@ -22,6 +22,12 @@ class SlideableCardPlacer : public CardPlacer {
 
 	UpdatableSprite spriteToDisplay;
 
+	std::vector<std::tuple<sf::Vector2f, bool, bool>> allowedPositions;
+
+	void giveNewRandomCard(Turn _turn);
+
+	sf::Vector2f getFirstSuitablePostion(bool _posesion);
+
 public:
 
 	SlideableCardPlacer(sf::Vector2f _restingPosition, sf::Vector2f _size, float _silideAmount, 

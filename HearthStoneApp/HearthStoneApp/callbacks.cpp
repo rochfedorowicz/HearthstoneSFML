@@ -7,34 +7,34 @@ void callbacks::testFn(std::shared_ptr<GameHandler> _gameHandler) {
 }
 
 void callbacks::shutDown(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameSatate = GameStateEnum::NONE;
+	_gameHandler->setGameState(GameStateEnum::NONE);
 	_gameHandler->getWindowPtr()->close();
 }
 
 void callbacks::playGame(std::shared_ptr<GameHandler> _gameHandler) {
 	if (*_gameHandler->getPlayerPtr()->getPointerToName() != "" &&
 		*_gameHandler->getOpponentPtr()->getPointerToName() != "") {
-		_gameHandler->gameSatate = GameStateEnum::PLAY;
+		_gameHandler->setGameState(GameStateEnum::PLAY);
 		_gameHandler->getWindowPtr()->close();
 	}
 }
 
 void callbacks::displayMenu(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameSatate = GameStateEnum::MENU;
+	_gameHandler->setGameState(GameStateEnum::MENU);
 	_gameHandler->getWindowPtr()->close();
 }
 
 void callbacks::displaySettings(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameSatate = GameStateEnum::SETTINGS;
+	_gameHandler->setGameState(GameStateEnum::SETTINGS);
 	_gameHandler->getWindowPtr()->close();
 }
 
 void callbacks::changeResolutionTo1920x1080(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameResolution = sf::Vector2i(1920, 1080);
+	_gameHandler->setGameResolution(sf::Vector2i(1920, 1080));
 }
 
 void callbacks::changeResolutionTo1280x720(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameResolution = sf::Vector2i(1280, 720);
+	_gameHandler->setGameResolution(sf::Vector2i(1280, 720));
 }
 
 void callbacks::skipRound(std::shared_ptr<GameHandler> _gameHandler) {
@@ -42,10 +42,10 @@ void callbacks::skipRound(std::shared_ptr<GameHandler> _gameHandler) {
 	if (_gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN) _gameHandler-> getPlayerPtr()->renewMana();
 	else _gameHandler->getOpponentPtr()->renewMana();
 	_gameHandler->getRoundHandlerPtr()->restartRound();
-	_gameHandler->hasJustFinished = true;
+	_gameHandler->setHasJustFinished(true);
 }
 
 void callbacks::proceedToGamePlay(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameSatate = GameStateEnum::PREPARING;
+	_gameHandler->setGameState(GameStateEnum::PREPARING);
 	_gameHandler->getWindowPtr()->close();
 }

@@ -13,7 +13,7 @@
 #include "dataHandler.h"
 
 //Enum indicating current game state
-enum class GameStateEnum { MENU, PLAY, SETTINGS, PREPARING, NONE};
+enum class GameStateEnum { MENU, PLAY, SETTINGS, PREPARING, FINISHING_SCREEN, NONE};
 
 //Class used for game handling
 class GameHandler : public std::enable_shared_from_this<GameHandler> {
@@ -42,16 +42,7 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 	//Mouse just released information
 	bool mouseReleased;
 
-	//Vector of drawables
-	std::vector<std::shared_ptr<Updatable>> interfaceElements, cards, disposeList, disposeCardList;
-
-	//Function for chechikng queue of waiting callbacks
-	void checkCallbacks();
-
-	//Loading grapchical interface elements required for current game state
-	void loadGUIforGamestate();
-
-public:
+	/////////////////
 
 	bool hasJustFinished;
 
@@ -63,11 +54,22 @@ public:
 
 	sf::String enteredText;
 
-	//Game state indicating enum should be private
 	GameStateEnum gameSatate;
 
-	//Should be private tooo!!!!
 	sf::Vector2i gameResolution;
+
+	//////////////////
+
+	//Vector of drawables
+	std::vector<std::shared_ptr<Updatable>> interfaceElements, cards, disposeList, disposeCardList;
+
+	//Function for chechikng queue of waiting callbacks
+	void checkCallbacks();
+
+	//Loading grapchical interface elements required for current game state
+	void loadGUIforGamestate();
+
+public:
 
 	//Defaul constructor, invoking it creates a window
 	GameHandler();
@@ -113,6 +115,26 @@ public:
 	std::shared_ptr<RoundsHandler> getRoundHandlerPtr();
 
 	std::shared_ptr<DataHandler> getDataHandlerPtr();
+
+	bool hasRoundJustFinished();
+
+	void setHasJustFinished(bool _newValue);
+
+	bool wasAnyKeyPressed();
+
+	bool wasBackspaceKeyPressed();
+
+	bool wasEnterKeyPressed();
+
+	sf::String getEnteredText();
+
+	GameStateEnum getGameState();
+
+	void setGameState(GameStateEnum _newGameState);
+
+	sf::Vector2i getGameResolution();
+
+	void setGameResolution(sf::Vector2i _newResolution);
 };
 #endif
 

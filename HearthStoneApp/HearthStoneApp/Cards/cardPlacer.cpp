@@ -18,14 +18,14 @@ CardPlacer::CardPlacer(sf::Vector2f _position, sf::Vector2f _size, CardPlacerTyp
 	: CardPlacer(_position, _size, _type, _gameHandler) {
 	cards = _initializeCardVector;
 	for (auto& card : cards) {
-		card->playerPosesion = (type == CardPlacerType::BATTLE_PLACE_PLAYER || _type == CardPlacerType::HERO_PLACE_PLAYER);
+		card->setPlayerPossesion(type == CardPlacerType::BATTLE_PLACE_PLAYER || _type == CardPlacerType::HERO_PLACE_PLAYER);
 		gameHandler->appendCard(card);
 	}
 }
 
 void CardPlacer::addCard(std::shared_ptr<Card> _cardPtr) {
 	cards.push_back(_cardPtr);
-	_cardPtr->playerPosesion = type == CardPlacerType::BATTLE_PLACE_PLAYER;
+	_cardPtr->setPlayerPossesion(type == CardPlacerType::BATTLE_PLACE_PLAYER);
 }
 
 bool CardPlacer::shouldBeAligned(std::shared_ptr<Card> _card) {
@@ -121,9 +121,9 @@ void CardPlacer::update() {
 
 	if (Card::getCurrentlyHeldCard().get() != nullptr && isCursorHoverdOver() && gameHandler->isMouseReleased() 
 		&& currentlyActivePlaceHolder != shared_from_this()) {
-		if ((Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
+		if ((Card::getCurrentlyHeldCard()->isPossesedByPlayer() && type == CardPlacerType::BATTLE_PLACE_PLAYER &&
 				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN && Card::getCurrentlyHeldCard()->getCardType() != CardType::PLAYER)
-				|| (!Card::getCurrentlyHeldCard()->playerPosesion && type == CardPlacerType::BATTLE_PLACE_OPPONENT &&
+				|| (!Card::getCurrentlyHeldCard()->isPossesedByPlayer() && type == CardPlacerType::BATTLE_PLACE_OPPONENT &&
 				gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN && Card::getCurrentlyHeldCard()->getCardType() != CardType::PLAYER)) {
 			if (CardPlacer::numberOfCurrentlyPointedPlaceHolders == 1) {
 				addCard(Card::getCurrentlyHeldCard());
@@ -166,7 +166,7 @@ void CardPlacer::update() {
 }
 
 bool CardPlacer::shouldBeMoved(std::shared_ptr<Card> _card, std::shared_ptr<Card> _card2) {
-	if (_card->getBounds().intersects(_card2->getBounds()) && _card->playerPosesion == _card2->playerPosesion && !gameHandler->isMousePressed()) return true;
+	if (_card->getBounds().intersects(_card2->getBounds()) && _card->isPossesedByPlayer() == _card2->isPossesedByPlayer() && !gameHandler->isMousePressed()) return true;
 	return false;
 }
 
@@ -198,4 +198,12 @@ void CardPlacer::move(sf::Vector2f _moveVector) {
 
 bool CardPlacer::shouldBeDestroyed() {
 	return false;
+}
+
+std::shared_ptr<CardPlacer> CardPlacer::getCurrentlyActivePlaceHolder() {
+	return currentlyActivePlaceHolder;
+}
+
+size_t CardPlacer::getNumberOfCurrentlyPointedPlaceHolders() {
+	return numberOfCurrentlyPointedPlaceHolders;
 }

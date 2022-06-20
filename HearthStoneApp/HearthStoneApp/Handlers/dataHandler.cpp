@@ -44,7 +44,7 @@ bool DataHandler::loadTextures(std::string _folderName) {
 
 bool DataHandler::reloadTextures(std::string _folderName) {
 	textures.clear();
-	loadTextures(_folderName);
+	return loadTextures(_folderName);
 }
 
 bool DataHandler::loadFonts(std::string _folderName) {
@@ -57,4 +57,8 @@ bool DataHandler::loadFonts(std::string _folderName) {
 			return false;
 	}
 	return true;
+}
+
+sf::Vector2i DataHandler::getLoadedTexturesResolution() {
+	return loadedTexturesResolution;
 }

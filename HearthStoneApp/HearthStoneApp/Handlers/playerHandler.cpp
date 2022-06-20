@@ -20,6 +20,11 @@ void PlayerHandler::renewMana() {
 	currentMana = mana;
 }
 
+void PlayerHandler::dealDamage(int _damageAmount) {
+	if (_damageAmount > health) health = 0;
+	else health -= _damageAmount;
+}
+
 int PlayerHandler::getDamage() {
 	return damage;
 }
@@ -38,4 +43,8 @@ int PlayerHandler::getMaxMana() {
 
 std::shared_ptr<std::string> PlayerHandler::getPointerToName() {
 	return playerName;
+}
+
+void PlayerHandler::setHealthPoints(int _newValue) {
+	health = _newValue;
 }

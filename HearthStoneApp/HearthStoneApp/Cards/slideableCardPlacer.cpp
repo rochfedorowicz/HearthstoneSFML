@@ -12,6 +12,12 @@ SlideableCardPlacer::SlideableCardPlacer(sf::Vector2f _restingPosition, sf::Vect
 
 	singleMove = moveType == MoveType::VERTICAL ? sf::Vector2f(0, 1) : sf::Vector2f(1, 0);
 	if (_silideAmount < 0) singleMove *= -1.0f;
+
+	auto move = sf::Vector2f(body.getGlobalBounds().width / 5.0, 0);
+	auto firstPosition = body.getPosition() + sf::Vector2f(20, 20);
+	allowedPositions = { {firstPosition, 1, 1 }, {firstPosition + 1.0f * move, 1, 1},
+		{firstPosition + 2.0f * move, 1, 1}, {firstPosition + 3.0f * move, 1, 1},
+		{firstPosition + 4.0f * move, 1, 1}};
 }
 
 SlideableCardPlacer::SlideableCardPlacer(sf::Vector2f _restingPosition, sf::Vector2f _size, float _silideAmount,
@@ -21,10 +27,14 @@ SlideableCardPlacer::SlideableCardPlacer(sf::Vector2f _restingPosition, sf::Vect
 	playerCards = _initializePlayersCardVector;
 	opponentCards = _initializeOpponentsCardVector;
 	for (auto& card : playerCards) {
-		card->playerPosesion = true;
+		card->setPlayerPossesion(true);
+		card->move(getFirstSuitablePostion(true));
 		gameHandler->appendCard(card);
 	}
-	for (auto& card : opponentCards) card->playerPosesion = false;
+	for (auto& card : opponentCards) {
+		card->setPlayerPossesion(false);
+		card->move(getFirstSuitablePostion(false));
+	}
 	_initializePlayersCardVector.insert(_initializePlayersCardVector.end(), _initializeOpponentsCardVector.begin(), _initializeOpponentsCardVector.end());
 	cards = _initializePlayersCardVector;
 }
@@ -33,14 +43,14 @@ void SlideableCardPlacer::move(sf::Vector2f _moveVector) {
 	spriteToDisplay.move(_moveVector);
 	CardPlacer::move(_moveVector);
 	for (auto& card : cards) {
-		card->positionBeforeDrag += _moveVector;
+		card->setPositionBeforeDrag(card->getPositionBeforeDrag()  + _moveVector);
 	}
 }
 
 void SlideableCardPlacer::removeCard(std::shared_ptr<Card> _cardPtr) {
 	CardPlacer::removeCard(_cardPtr);
 	std::vector<std::shared_ptr<Card>>::iterator it, end;
-	if (_cardPtr->playerPosesion) {
+	if (_cardPtr->isPossesedByPlayer()) {
 		it = playerCards.begin();
 		end = playerCards.end();
 	}
@@ -50,7 +60,7 @@ void SlideableCardPlacer::removeCard(std::shared_ptr<Card> _cardPtr) {
 	}
 	for (; it != end; ++it) {
 		if (*it == _cardPtr) {
-			(_cardPtr->playerPosesion ? playerCards : opponentCards).erase(it);
+			(_cardPtr->isPossesedByPlayer() ? playerCards : opponentCards).erase(it);
 			return;
 		}
 	}
@@ -59,18 +69,22 @@ void SlideableCardPlacer::removeCard(std::shared_ptr<Card> _cardPtr) {
 void SlideableCardPlacer::update() {
 	CardPlacer::update();
 	spriteToDisplay.update();
-	if (gameHandler->hasJustFinished) {
+	if (gameHandler->hasRoundJustFinished()) {
 		if (gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::OPPONENTS_TURN) {
-			for (auto& card : opponentCards)
-				gameHandler->appendCard(card);
 			for (auto& card : playerCards)
 				gameHandler->disposeCard(card);
+			if (opponentCards.size() < 3) giveNewRandomCard(Turn::OPPONENTS_TURN);
+			for (auto& card : opponentCards)
+				gameHandler->appendCard(card);
+
 		}
 		else {
-			for (auto& card : playerCards)
-				gameHandler->appendCard(card);
 			for (auto& card : opponentCards)
 				gameHandler->disposeCard(card);
+			if (playerCards.size() < 3) giveNewRandomCard(Turn::PLAYERS_TURN);
+			for (auto& card : playerCards)
+				gameHandler->appendCard(card);
+
 		}
 	}
 	if (moveType == MoveType::VERTICAL) {
@@ -86,3 +100,33 @@ void SlideableCardPlacer::update() {
 bool SlideableCardPlacer::shouldBeDestroyed() {
 	return false;
 }
+
+void SlideableCardPlacer::giveNewRandomCard(Turn _turn) {
+	std::vector<CardBlueprint> blueprints = {cardBlueprints::ORC, cardBlueprints::WARRIOR, cardBlueprints::WIKING};
+	int blueprintNumber = MyHelper::getRandomInt(0, 2);
+	std::shared_ptr<Card> newCard = std::make_shared<MilitaryCard>(body.getPosition() + sf::Vector2f(10, 10), blueprints.at(blueprintNumber), gameHandler);
+	newCard->setPlayerPossesion(_turn == Turn::PLAYERS_TURN ? true : false);
+	newCard->move(getFirstSuitablePostion(_turn == Turn::PLAYERS_TURN ? true : false));
+	cards.push_back(newCard);
+	(_turn == Turn::PLAYERS_TURN ? playerCards : opponentCards).push_back(newCard);
+}
+
+
+sf::Vector2f SlideableCardPlacer::getFirstSuitablePostion(bool _posesion) {
+	if (_posesion) {
+		for (auto& position : allowedPositions)
+			if (std::get<1>(position)) {
+				std::get<1>(position) = false;
+				return std::get<0>(position);
+			}
+	}
+	else {
+		for (auto& position : allowedPositions)
+			if (std::get<2>(position)) {
+				std::get<2>(position) = false;
+				return std::get<0>(position);
+			}
+	}
+	return sf::Vector2f(-1000, -1000);
+}
+

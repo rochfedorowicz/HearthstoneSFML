@@ -17,6 +17,8 @@ public:
 
 	void renewMana();
 
+	void dealDamage(int _damageAmount);
+
 	int getDamage();
 
 	int getHealth();
@@ -24,6 +26,8 @@ public:
 	int getCurrentMana();
 
 	int getMaxMana();
+
+	void setHealthPoints(int _newValue);
 
 	std::shared_ptr<std::string> getPointerToName();
 

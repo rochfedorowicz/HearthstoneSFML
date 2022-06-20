@@ -3,6 +3,7 @@
 #define MY_HELPER
 #include <SFML/Graphics.hpp>
 #include <sstream>
+#include <random>
 
 typedef bool (lambdaFunction)(double&, double&);
 
@@ -19,5 +20,7 @@ public:
 
 		//Function converting int into string
 		static std::string convertIntToString(int _intValue);
+
+		static int getRandomInt(int _lowerInterval, int _upperInterval);
 };
 #endif

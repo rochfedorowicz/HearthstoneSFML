@@ -11,6 +11,7 @@
 #include "../selfUpdatableText.h"
 #include "../Cards/slideableCardPlacer.h"
 #include "../writtingField.h"
+#include "../cardBlueprint.h"
 
 #define ADD_RESIZABLE_INTERFACE_ELEMENT(type, resCoeff, posX, posY, sizeX, sizeY, ...) \
 appendDrawable(std::make_shared<type>(resCoeff * sf::Vector2f(posX, posY), resCoeff * sf::Vector2f(sizeX, sizeY),\
@@ -22,9 +23,9 @@ GameHandler::GameHandler() {
 	currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: MENU", sf::Style::Titlebar);
 	gameSatate = GameStateEnum::MENU;
 	gameResolution = sf::Vector2i(1920, 1080);
-	playerHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
-	opponentHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
-	roundsHandlerPtr = std::make_shared<RoundsHandler>(20);
+	playerHandlerPtr = std::make_shared<PlayerHandler>(7, 1, 12);
+	opponentHandlerPtr = std::make_shared<PlayerHandler>(15, 1, 10);
+	roundsHandlerPtr = std::make_shared<RoundsHandler>(30);
 	dataHandlerPtr = std::make_shared<DataHandler>();
 }
 
@@ -103,11 +104,9 @@ void GameHandler::manageWindow() {
 
 		for (auto& card : cards) {
 			card->update();
-			//TODO: Implement as an event invoked by picking card
 			if (Card::getCurrentlyHeldCard().get() != nullptr &&
 				card.get() == Card::getCurrentlyHeldCard().get() && card != cards.back())
 				card.swap(cards.back());
-			/////////////////////////////////////////////////////
 			if (card->shouldBeDestroyed()) {
 				disposeCardList.push_back(card);
 			}
@@ -137,9 +136,8 @@ void GameHandler::manageWindow() {
 
 		disposeCardList.clear();
 
-		std::cout << playerHandlerPtr->getHealth() << " " << opponentHandlerPtr->getHealth();
-		if (playerHandlerPtr->getHealth() == 0 || opponentHandlerPtr->getHealth() == 0) {
-			gameSatate = GameStateEnum::NONE;
+		if (gameSatate == GameStateEnum::PLAY && (playerHandlerPtr->getHealth() == 0 || opponentHandlerPtr->getHealth() == 0)) {
+			gameSatate = GameStateEnum::FINISHING_SCREEN;
 			currentWindowPtr->close();
 		}
     }
@@ -164,9 +162,14 @@ void GameHandler::manageWindow() {
 		case GameStateEnum::PREPARING:
 			currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: CHOOSE NAME'S", sf::Style::Titlebar);
 			if (gameResolution == sf::Vector2i(1920, 1080) &&
-				dataHandlerPtr->loadedTexturesResolution != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1920x1080");
+				dataHandlerPtr->getLoadedTexturesResolution() != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1920x1080");
 			if (gameResolution == sf::Vector2i(1280, 720) &&
-				dataHandlerPtr->loadedTexturesResolution != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1280x720");
+				dataHandlerPtr->getLoadedTexturesResolution() != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1280x720");
+			manageWindow();
+			break;
+
+		case GameStateEnum::FINISHING_SCREEN:
+			currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: FINISHING SCREEN", sf::Style::Titlebar);
 			manageWindow();
 			break;
 
@@ -223,29 +226,26 @@ void GameHandler::loadGUIforGamestate() {
 			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::PLAY_GAME_BUTTON);
 			break;
 
+		case GameStateEnum::FINISHING_SCREEN:
+			ADD_INTERFACE_ELEMENT(UpdatableSprite, 0, 0, 640, 480, "gratulationBackground");
+			ADD_INTERFACE_ELEMENT(SelfUpdatableText, 100, 140, 400, 170, getFontPtrByName("Matura"), sf::Color::Black,
+				std::make_shared<std::function<std::string(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getRoundsOwner));
+			ADD_INTERFACE_ELEMENT(Button, 120, 380, 400, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
+			break;
+
 		case GameStateEnum::PLAY:
 			 {
 				float resCoeff = gameResolution.x == 1920 ? 1 : 2.0 / 3.0;
-				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 130),
-					getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 40, 3, 10, shared_from_this()),
-					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 560),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture4" : "cardTexture4Small"), 100, 1, 10, shared_from_this()),
-					card3 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 1000),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
-					card4 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(500, 1000),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture4" : "cardTexture4Small"), 100, 1, 10, shared_from_this()),
-					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 745),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture2" : "cardTexture2Small"), playerHandlerPtr, shared_from_this()),
-					opponentsCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 125),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture3" : "cardTexture3Small"), opponentHandlerPtr, shared_from_this());
+				std::shared_ptr<MilitaryCard> 
+					card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 130), cardBlueprints::ORC, shared_from_this()),
+					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 745), "heroCard", playerHandlerPtr, shared_from_this()),
+					opponentsCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 125), "opponentCard", opponentHandlerPtr, shared_from_this());
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 260, 40, 1420, 60, BarType::HORIZONTAL, barBlueprints::ROUNDS_TIMER_BAR);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1830, 360, 60, 630, BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1730, 360, 60, 630, BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 130, 1400, 410, CardPlacerType::BATTLE_PLACE_OPPONENT,
-					std::vector<std::shared_ptr<Card>> { card });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 560, 1400, 410, CardPlacerType::BATTLE_PLACE_PLAYER,
-					std::vector<std::shared_ptr<Card>> { card2 });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableSprite, resCoeff, 0, 0, 1920, 1080, "backgroundSmall");
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 130, 1400, 410, CardPlacerType::BATTLE_PLACE_OPPONENT);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 560, 1400, 410, CardPlacerType::BATTLE_PLACE_PLAYER);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableSprite, resCoeff, 0, 0, 1920, 1080, "background");
 				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 745, 160, 250, CardPlacerType::HERO_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { playerCard });
 				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 125, 160, 250, CardPlacerType::HERO_PLACE_OPPONENT,
@@ -253,7 +253,6 @@ void GameHandler::loadGUIforGamestate() {
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 40, 160, 50, buttonBlueprints::SKIP_ROUND_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 120, 160, 50, buttonBlueprints::DISPLAY_MENU_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 200, 160, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 280, 160, 50, buttonBlueprints::TEST_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 280, -10, 200, 60, "Rounds timer", getFontPtrByName("Matura"), sf::Color::Black);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 20, 490, 250, 70, "It is turn of", getFontPtrByName("Matura"), sf::Color::Black);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(SelfUpdatableText, resCoeff, 0, 530, 220, 100, getFontPtrByName("Matura"), sf::Color::Black,
@@ -261,7 +260,7 @@ void GameHandler::loadGUIforGamestate() {
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1710, 850, 200, 60, "Player's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1610, 840, 200, 60, "Opponent's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(SlideableCardPlacer, resCoeff, 280, 1000, 1400, 300, resCoeff * -180, "slideableDesk", MoveType::VERTICAL,
-					std::vector<std::shared_ptr<Card>> { card3 }, std::vector<std::shared_ptr<Card>> { card4 });
+					std::vector<std::shared_ptr<Card>> { card }, std::vector<std::shared_ptr<Card>> { });
 				roundsHandlerPtr->startRound();
 			}
 			break;
@@ -285,4 +284,44 @@ std::shared_ptr<RoundsHandler> GameHandler::getRoundHandlerPtr() {
 
 std::shared_ptr<DataHandler> GameHandler::getDataHandlerPtr() {
 	return dataHandlerPtr;
+}
+
+bool GameHandler::hasRoundJustFinished() {
+	return hasJustFinished;
+}
+
+void GameHandler::setHasJustFinished(bool _newValue) {
+	hasJustFinished = _newValue;
+}
+
+bool GameHandler::wasAnyKeyPressed() {
+	return wasKeyPressed;
+}
+
+bool GameHandler::wasBackspaceKeyPressed() {
+	return wasBackspacePressed;
+}
+
+bool GameHandler::wasEnterKeyPressed() {
+	return wasEnterPressed;
+}
+
+sf::String GameHandler::getEnteredText() {
+	return enteredText;
+}
+
+GameStateEnum GameHandler::getGameState() {
+	return gameSatate;
+}
+
+void GameHandler::setGameState(GameStateEnum _newGameState) {
+	gameSatate = _newGameState;
+}
+
+sf::Vector2i GameHandler::getGameResolution() {
+	return gameResolution;
+}
+
+void GameHandler::setGameResolution(sf::Vector2i _newResolution) {
+	gameResolution = _newResolution;
 }

@@ -31,6 +31,10 @@ public:
 
 	bool loadTextures(std::string _folderName);
 
+	bool reloadTextures(std::string _folderName);
+
 	bool loadFonts(std::string _folderName);
+
+	sf::Vector2i loadedTexturesResolution;
 };
 #endif

@@ -42,6 +42,11 @@ bool DataHandler::loadTextures(std::string _folderName) {
 	return true;
 }
 
+bool DataHandler::reloadTextures(std::string _folderName) {
+	textures.clear();
+	loadTextures(_folderName);
+}
+
 bool DataHandler::loadFonts(std::string _folderName) {
 	auto texturesDirectory = std::filesystem::current_path();
 	texturesDirectory += "\\" + _folderName;

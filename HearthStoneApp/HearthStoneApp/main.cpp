@@ -18,8 +18,10 @@
 int main() {
 
     std::shared_ptr<GameHandler> gameHandlerPtr = std::make_shared<GameHandler>();
-    gameHandlerPtr->getDataHandlerPtr()->loadTextures("Textures");
+    gameHandlerPtr->getDataHandlerPtr()->loadTextures("Textures\\1920x1080");
+    gameHandlerPtr->getDataHandlerPtr()->loadedTexturesResolution = sf::Vector2i(1920, 1080);
     gameHandlerPtr->getDataHandlerPtr()->loadFonts("Fonts");
+    
     gameHandlerPtr->manageWindow();
 
     return 0;

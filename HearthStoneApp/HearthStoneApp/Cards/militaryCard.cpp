@@ -12,6 +12,10 @@ MilitaryCard::MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> 
 	healthLabel = UpdatableText(_position + sf::Vector2f(0.8 * body.getSize().x, 0.85 * body.getSize().y), 0.25 * body.getSize().y, MyHelper::convertIntToString(health), gameHandler->getFontPtrByName("Calibri"), sf::Color::Black, _gameHandler);
 }
 
+MilitaryCard::MilitaryCard(sf::Vector2f _position, CardBlueprint _cardBlueprint, std::shared_ptr<GameHandler> _gameHandler) 
+	: MilitaryCard(_position, _gameHandler->getTexturePtrByName(_cardBlueprint.textureName), _cardBlueprint.health,
+	_cardBlueprint.damage, _cardBlueprint.mana, _gameHandler) {}
+
 void MilitaryCard::interactWithCard(std::shared_ptr<Card> _card) {
 	if ((_card->getCardType() == CardType::MILITARY || _card->getCardType() == CardType::PLAYER) &&
 		((gameHandler->getRoundHandlerPtr()->getTurnOrder() == Turn::PLAYERS_TURN &&

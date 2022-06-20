@@ -3,6 +3,7 @@
 #define MILITARY_CARD
 #include "card.h"
 #include "../updateableText.h"
+#include "../cardBlueprint.h"
 
 //Class representing military card
 class MilitaryCard : public Card {
@@ -21,7 +22,7 @@ public:
 	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, int _mana, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Deafult military card constructor
-	MilitaryCard(sf::Vector2f _position,  std::shared_ptr<GameHandler> _gameHandler);
+	MilitaryCard(sf::Vector2f _position, CardBlueprint _cardBlueprint, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Interacting with another cards
 	void interactWithCard(std::shared_ptr<Card> _card);

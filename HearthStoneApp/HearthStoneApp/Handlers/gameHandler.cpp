@@ -163,6 +163,10 @@ void GameHandler::manageWindow() {
 
 		case GameStateEnum::PREPARING:
 			currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: CHOOSE NAME'S", sf::Style::Titlebar);
+			if (gameResolution == sf::Vector2i(1920, 1080) &&
+				dataHandlerPtr->loadedTexturesResolution != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1920x1080");
+			if (gameResolution == sf::Vector2i(1280, 720) &&
+				dataHandlerPtr->loadedTexturesResolution != gameResolution) dataHandlerPtr->reloadTextures("Textures\\1280x720");
 			manageWindow();
 			break;
 
@@ -241,7 +245,7 @@ void GameHandler::loadGUIforGamestate() {
 					std::vector<std::shared_ptr<Card>> { card });
 				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 280, 560, 1400, 410, CardPlacerType::BATTLE_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { card2 });
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableSprite, resCoeff, 0, 0, 1920, 1080, "background");
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableSprite, resCoeff, 0, 0, 1920, 1080, "backgroundSmall");
 				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 745, 160, 250, CardPlacerType::HERO_PLACE_PLAYER,
 					std::vector<std::shared_ptr<Card>> { playerCard });
 				ADD_RESIZABLE_INTERFACE_ELEMENT(CardPlacer, resCoeff, 20, 125, 160, 250, CardPlacerType::HERO_PLACE_OPPONENT,

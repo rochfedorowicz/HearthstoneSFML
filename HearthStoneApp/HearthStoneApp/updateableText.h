@@ -32,9 +32,13 @@ public:
 
 	bool shouldBeDestroyed();
 
-	void contentUpdate(std::string _newContent);
+	void contentUpdate(const sf::String _newContent);
+
+	const sf::String getContent();
 
 	void positionUpdate(sf::Vector2f _change);
+
+	void reposition();
 
 };
 #endif

@@ -114,6 +114,12 @@
     <ClCompile Include="Cards\slideableCardPlacer.cpp">
       <Filter>Pliki źródłowe\Cards</Filter>
     </ClCompile>
+    <ClCompile Include="writtingField.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="cardBlueprint.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h">
@@ -185,6 +191,12 @@
     <ClInclude Include="Cards\slideableCardPlacer.h">
       <Filter>Pliki nagłówkowe\Cards</Filter>
     </ClInclude>
+    <ClInclude Include="writtingField.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="cardBlueprint.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\cardTexture.png">
@@ -194,6 +206,12 @@
       <Filter>Pliki zasobów\Textures</Filter>
     </Image>
     <Image Include="Textures\background.png">
+      <Filter>Pliki zasobów\Textures</Filter>
+    </Image>
+    <Image Include="Textures\slideableDesk.png">
+      <Filter>Pliki zasobów\Textures</Filter>
+    </Image>
+    <Image Include="Textures\backgroundSmall.png">
       <Filter>Pliki zasobów\Textures</Filter>
     </Image>
   </ItemGroup>

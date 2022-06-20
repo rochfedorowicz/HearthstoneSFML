@@ -21,3 +21,7 @@ void Interactive::update() {
 	else body.setOutlineThickness(0);
 	UpdatableRect::update();
 }
+
+bool Interactive::shouldBeDestroyed() {
+	return false;
+}

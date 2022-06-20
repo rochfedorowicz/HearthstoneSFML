@@ -12,8 +12,11 @@ void callbacks::shutDown(std::shared_ptr<GameHandler> _gameHandler) {
 }
 
 void callbacks::playGame(std::shared_ptr<GameHandler> _gameHandler) {
-	_gameHandler->gameSatate = GameStateEnum::PLAY;
-	_gameHandler->getWindowPtr()->close();
+	if (*_gameHandler->getPlayerPtr()->getPointerToName() != "" &&
+		*_gameHandler->getOpponentPtr()->getPointerToName() != "") {
+		_gameHandler->gameSatate = GameStateEnum::PLAY;
+		_gameHandler->getWindowPtr()->close();
+	}
 }
 
 void callbacks::displayMenu(std::shared_ptr<GameHandler> _gameHandler) {
@@ -40,4 +43,9 @@ void callbacks::skipRound(std::shared_ptr<GameHandler> _gameHandler) {
 	else _gameHandler->getOpponentPtr()->renewMana();
 	_gameHandler->getRoundHandlerPtr()->restartRound();
 	_gameHandler->hasJustFinished = true;
+}
+
+void callbacks::proceedToGamePlay(std::shared_ptr<GameHandler> _gameHandler) {
+	_gameHandler->gameSatate = GameStateEnum::PREPARING;
+	_gameHandler->getWindowPtr()->close();
 }

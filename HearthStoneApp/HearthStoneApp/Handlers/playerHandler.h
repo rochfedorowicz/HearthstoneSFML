@@ -7,6 +7,8 @@ class PlayerHandler {
 
 	int damage, health, mana, currentMana;	
 
+	std::shared_ptr<std::string> playerName;
+
 public:
 
 	PlayerHandler(int _damage, int _health, int _mana);
@@ -22,6 +24,8 @@ public:
 	int getCurrentMana();
 
 	int getMaxMana();
+
+	std::shared_ptr<std::string> getPointerToName();
 
 };
 #endif

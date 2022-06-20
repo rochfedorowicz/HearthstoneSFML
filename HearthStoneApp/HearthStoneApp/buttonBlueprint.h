@@ -62,5 +62,9 @@ namespace buttonBlueprints {
 	const ButtonBlueprint SKIP_ROUND_BUTTON = ButtonBlueprint("Skip round",
 		colorBlueprints::BUTTON_BEIGE, "Matura", sf::Color::Black,
 		std::make_shared<std::function<void(std::shared_ptr<GameHandler>)>>(&callbacks::skipRound));
+
+	const ButtonBlueprint PREPARE_GAMEPLAY_BUTTON = ButtonBlueprint("Start",
+		colorBlueprints::BUTTON_BEIGE, "Matura", sf::Color::Black,
+		std::make_shared<std::function<void(std::shared_ptr<GameHandler>)>>(&callbacks::proceedToGamePlay));
 }
 #endif

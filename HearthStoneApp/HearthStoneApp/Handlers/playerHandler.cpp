@@ -5,6 +5,7 @@ PlayerHandler::PlayerHandler(int _damage, int _health, int _mana) {
 	damage = _damage;
 	health = _health;
 	mana = currentMana = _mana;
+	playerName = std::make_shared<std::string>("");
 }
 
 bool PlayerHandler::consumeMana(int _amountOfMana) {
@@ -33,4 +34,8 @@ int PlayerHandler::getCurrentMana() {
 
 int PlayerHandler::getMaxMana() {
 	return mana;
+}
+
+std::shared_ptr<std::string> PlayerHandler::getPointerToName() {
+	return playerName;
 }

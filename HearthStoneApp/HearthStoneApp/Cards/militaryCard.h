@@ -20,6 +20,9 @@ public:
 	//Deafult military card constructor
 	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, int _mana, std::shared_ptr<GameHandler> _gameHandler);
 
+	//Deafult military card constructor
+	MilitaryCard(sf::Vector2f _position,  std::shared_ptr<GameHandler> _gameHandler);
+
 	//Interacting with another cards
 	void interactWithCard(std::shared_ptr<Card> _card);
 

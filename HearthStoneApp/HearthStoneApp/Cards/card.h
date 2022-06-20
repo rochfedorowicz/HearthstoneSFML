@@ -25,12 +25,13 @@ class Card : public Interactive, public std::enable_shared_from_this<Card> {
 	//Differnce of distance between a grip of mouse and the origin of the card 
 	sf::Vector2f differenceOfDrag;
 
-	sf::Vector2f positionBeforeDrag;
-
 	static std::shared_ptr<Card> currentlyHeldCard;
 
 public:
-		
+	
+	//Should be private
+	sf::Vector2f positionBeforeDrag;
+
 	//Texture of a card
 	sf::Sprite texture;
 

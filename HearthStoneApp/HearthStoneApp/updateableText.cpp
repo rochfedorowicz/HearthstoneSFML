@@ -36,12 +36,24 @@ void UpdatableText::update() {
 	gameHandler->getWindowPtr()->draw(textToDisplay);
 }
 
+void UpdatableText::reposition() {
+	sf::Vector2f position = textToDisplay.getPosition();
+	textToDisplay.setPosition(0, 0);
+	textToDisplay.setOrigin(sf::Vector2f((textToDisplay.getCharacterSize() * textToDisplay.getString().getSize()) / 4, textToDisplay.getCharacterSize() / 1.5));
+	textToDisplay.setPosition(position);
+}
+
 bool UpdatableText::shouldBeDestroyed() {
 	return false;
 }
 
-void UpdatableText::contentUpdate(std::string _newContent) {
+void UpdatableText::contentUpdate(const sf::String _newContent) {
 	textToDisplay.setString(_newContent);
+	reposition();
+}
+
+const sf::String UpdatableText::getContent() {
+	return textToDisplay.getString();
 }
 
 void UpdatableText::positionUpdate(sf::Vector2f _change) {

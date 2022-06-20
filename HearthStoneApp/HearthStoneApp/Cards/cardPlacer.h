@@ -26,11 +26,13 @@ class CardPlacer : public Interactive, public std::enable_shared_from_this<CardP
 
 	std::shared_ptr<Card> getCardPointedByMouse();
 
+	bool isPointedByMouse;
+
 protected:
 
 	std::vector<std::shared_ptr<Card>> cards;
 
-	void move(sf::Vector2f _moveVector);
+	virtual void move(sf::Vector2f _moveVector);
 
 	virtual void removeCard(std::shared_ptr<Card> _cardPtr);
 
@@ -44,7 +46,11 @@ public:
 
 	static std::shared_ptr<CardPlacer> currentlyActivePlaceHolder;
 
+	static size_t numberOfCurrentlyPointedPlaceHolders;
+
 	void update();
+
+	bool shouldBeDestroyed();
 
 };
 #endif

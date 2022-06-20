@@ -13,7 +13,7 @@
 #include "dataHandler.h"
 
 //Enum indicating current game state
-enum class GameStateEnum { MENU, PLAY, SETTINGS, NONE};
+enum class GameStateEnum { MENU, PLAY, SETTINGS, PREPARING, NONE};
 
 //Class used for game handling
 class GameHandler : public std::enable_shared_from_this<GameHandler> {
@@ -54,6 +54,14 @@ class GameHandler : public std::enable_shared_from_this<GameHandler> {
 public:
 
 	bool hasJustFinished;
+
+	bool wasKeyPressed;
+
+	bool wasBackspacePressed;
+
+	bool wasEnterPressed;
+
+	sf::String enteredText;
 
 	//Game state indicating enum should be private
 	GameStateEnum gameSatate;

@@ -10,14 +10,16 @@
 #include "callbacks.h"
 #include "buttonBlueprint.h"
 
+
+#include <iostream>
+#include <string>
+#include <regex>
+
 int main() {
 
     std::shared_ptr<GameHandler> gameHandlerPtr = std::make_shared<GameHandler>();
-
     gameHandlerPtr->getDataHandlerPtr()->loadTextures("Textures");
-
     gameHandlerPtr->getDataHandlerPtr()->loadFonts("Fonts");
-
     gameHandlerPtr->manageWindow();
 
     return 0;

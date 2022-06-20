@@ -17,6 +17,9 @@ protected:
 public:
 
 	//Main constructor
+	UpdatableSprite();
+
+	//Main constructor
 	UpdatableSprite(sf::Vector2f _position, sf::Vector2f _size, std::string _textureName, std::shared_ptr<GameHandler> _gameHandler);
 
 	//Overwritten function from abstact updatable class
@@ -24,5 +27,7 @@ public:
 
 	//Overwritten function from abstact updatable class
 	virtual bool shouldBeDestroyed();
+
+	void move(sf::Vector2f _moveVector);
 };
 #endif

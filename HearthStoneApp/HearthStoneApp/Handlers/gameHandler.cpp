@@ -10,6 +10,7 @@
 #include "../updateableText.h"
 #include "../selfUpdatableText.h"
 #include "../Cards/slideableCardPlacer.h"
+#include "../writtingField.h"
 
 #define ADD_RESIZABLE_INTERFACE_ELEMENT(type, resCoeff, posX, posY, sizeX, sizeY, ...) \
 appendDrawable(std::make_shared<type>(resCoeff * sf::Vector2f(posX, posY), resCoeff * sf::Vector2f(sizeX, sizeY),\
@@ -23,7 +24,7 @@ GameHandler::GameHandler() {
 	gameResolution = sf::Vector2i(1920, 1080);
 	playerHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
 	opponentHandlerPtr = std::make_shared<PlayerHandler>(10, 10, 100);
-	roundsHandlerPtr = std::make_shared<RoundsHandler>(5);
+	roundsHandlerPtr = std::make_shared<RoundsHandler>(20);
 	dataHandlerPtr = std::make_shared<DataHandler>();
 }
 
@@ -63,6 +64,9 @@ void GameHandler::manageWindow() {
         mouseClicked = false;
 		mouseReleased = false;
 		hasJustFinished = false;
+		wasKeyPressed = false;
+		wasBackspacePressed = false;
+		wasEnterPressed = false;
         sf::Event event;
         while (currentWindowPtr->pollEvent(event))
         {
@@ -76,6 +80,10 @@ void GameHandler::manageWindow() {
 				mousePressed = false;
 				mouseReleased = true;
 			}
+			if (event.type == sf::Event::KeyPressed) wasKeyPressed = true;
+			if (event.type == sf::Event::TextEntered) enteredText = event.text.unicode;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) wasEnterPressed = true;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) wasBackspacePressed = true;
         }
 		
 		if (gameSatate == GameStateEnum::PLAY && roundsHandlerPtr->hasRoundFinished()) {
@@ -128,7 +136,14 @@ void GameHandler::manageWindow() {
 		}
 
 		disposeCardList.clear();
+
+		std::cout << playerHandlerPtr->getHealth() << " " << opponentHandlerPtr->getHealth();
+		if (playerHandlerPtr->getHealth() == 0 || opponentHandlerPtr->getHealth() == 0) {
+			gameSatate = GameStateEnum::NONE;
+			currentWindowPtr->close();
+		}
     }
+
 	switch (gameSatate) {
 
 		case GameStateEnum::PLAY:
@@ -143,6 +158,11 @@ void GameHandler::manageWindow() {
 
 		case GameStateEnum::SETTINGS:
 			currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: SETTINGS", sf::Style::Titlebar);
+			manageWindow();
+			break;
+
+		case GameStateEnum::PREPARING:
+			currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: CHOOSE NAME'S", sf::Style::Titlebar);
 			manageWindow();
 			break;
 
@@ -175,36 +195,45 @@ void GameHandler::queueCallback(std::shared_ptr<std::function<void(std::shared_p
 }
 
 void GameHandler::loadGUIforGamestate() {
+	while (!interfaceElements.empty()) interfaceElements.pop_back();
+	while (!cards.empty()) cards.pop_back();
 	switch (gameSatate){
 		case GameStateEnum::MENU:
-			while (!interfaceElements.empty()) interfaceElements.pop_back();
-			ADD_INTERFACE_ELEMENT(Button, 120, 80, 400, 50, buttonBlueprints::PLAY_GAME_BUTTON);
+			ADD_INTERFACE_ELEMENT(UpdatableSprite, 0, 0, 640, 480, "menuBackgorund");
+			ADD_INTERFACE_ELEMENT(Button, 120, 80, 400, 50, buttonBlueprints::PREPARE_GAMEPLAY_BUTTON);
 			ADD_INTERFACE_ELEMENT(Button, 120, 180, 400, 50, buttonBlueprints::DISPLAY_SETTINGS_BUTTON);
 			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
 			break;
 
 		case GameStateEnum::SETTINGS:
-			while (!interfaceElements.empty()) interfaceElements.pop_back();
+			ADD_INTERFACE_ELEMENT(UpdatableSprite, 0, 0, 640, 480, "menuBackgorund");
 			ADD_INTERFACE_ELEMENT(Button, 120, 80, 400, 50, buttonBlueprints::CHANGE_RESOLUTION_TO_1920_X_1080_BUTTON);
 			ADD_INTERFACE_ELEMENT(Button, 120, 180, 400, 50, buttonBlueprints::CHANGE_RESOLUTION_TO_1280_X_720_BUTTON);
 			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::DISPLAY_MENU_BUTTON);
 			break;
 
+		case GameStateEnum::PREPARING:
+			ADD_INTERFACE_ELEMENT(UpdatableSprite, 0, 0, 640, 480, "chooseNamesBackground");
+			ADD_INTERFACE_ELEMENT(WrittingField, 120, 80, 400, 50, 10, "Default name", "Matura", sf::Color::White, "[A-Z]{1}[a-z]{2,9}$", playerHandlerPtr->getPointerToName());
+			ADD_INTERFACE_ELEMENT(WrittingField, 120, 180, 400, 50, 10, "Default name", "Matura", sf::Color::White, "[A-Z]{1}[a-z]{2,9}$", opponentHandlerPtr->getPointerToName());
+			ADD_INTERFACE_ELEMENT(Button, 120, 280, 400, 50, buttonBlueprints::PLAY_GAME_BUTTON);
+			break;
+
 		case GameStateEnum::PLAY:
-			while (!interfaceElements.empty()) interfaceElements.pop_back(); {
+			 {
 				float resCoeff = gameResolution.x == 1920 ? 1 : 2.0 / 3.0;
 				std::shared_ptr<MilitaryCard> card = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 130),
 					getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 40, 3, 10, shared_from_this()),
 					card2 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 560),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
+						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture4" : "cardTexture4Small"), 100, 1, 10, shared_from_this()),
 					card3 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(280, 1000),
 						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
 					card4 = std::make_shared<MilitaryCard>(resCoeff * sf::Vector2f(500, 1000),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), 100, 1, 10, shared_from_this()),
+						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture4" : "cardTexture4Small"), 100, 1, 10, shared_from_this()),
 					playerCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 745),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), playerHandlerPtr, shared_from_this()),
+						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture2" : "cardTexture2Small"), playerHandlerPtr, shared_from_this()),
 					opponentsCard = std::make_shared<PlayerCard>(resCoeff * sf::Vector2f(20, 125),
-						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture" : "cardTextureSmall"), opponentHandlerPtr, shared_from_this());
+						getTexturePtrByName(gameResolution.x == 1920 ? "cardTexture3" : "cardTexture3Small"), opponentHandlerPtr, shared_from_this());
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 260, 40, 1420, 60, BarType::HORIZONTAL, barBlueprints::ROUNDS_TIMER_BAR);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1830, 360, 60, 630, BarType::VERTICAL, barBlueprints::PLAYERS_MANA_BAR);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableBar, resCoeff, 1730, 360, 60, 630, BarType::VERTICAL, barBlueprints::OPPONENTS_MANA_BAR);
@@ -222,17 +251,13 @@ void GameHandler::loadGUIforGamestate() {
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 200, 160, 50, buttonBlueprints::SHUT_DOWN_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(Button, resCoeff, 1730, 280, 160, 50, buttonBlueprints::TEST_BUTTON);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 280, -10, 200, 60, "Rounds timer", getFontPtrByName("Matura"), sf::Color::Black);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 10, 490, 230, 100, "It is", getFontPtrByName("Matura"), sf::Color::Black);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(SelfUpdatableText, resCoeff, 0, 550, 280, 70, "player's turn", getFontPtrByName("Matura"), sf::Color::Black,
+				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 20, 490, 250, 70, "It is turn of", getFontPtrByName("Matura"), sf::Color::Black);
+				ADD_RESIZABLE_INTERFACE_ELEMENT(SelfUpdatableText, resCoeff, 0, 530, 220, 100, getFontPtrByName("Matura"), sf::Color::Black,
 					std::make_shared<std::function<std::string(std::shared_ptr<GameHandler>)>>(&getValueFunctions::getRoundsOwner));
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1710, 850, 200, 60, "Player's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
 				ADD_RESIZABLE_INTERFACE_ELEMENT(UpdatableText, resCoeff, 1610, 840, 200, 60, "Opponent's mana", getFontPtrByName("Matura"), sf::Color::Black, -90.0f);
-				ADD_RESIZABLE_INTERFACE_ELEMENT(SlideableCardPlacer, resCoeff, 280, 1000, 1400, 300, resCoeff * -180, MoveType::VERTICAL,
+				ADD_RESIZABLE_INTERFACE_ELEMENT(SlideableCardPlacer, resCoeff, 280, 1000, 1400, 300, resCoeff * -180, "slideableDesk", MoveType::VERTICAL,
 					std::vector<std::shared_ptr<Card>> { card3 }, std::vector<std::shared_ptr<Card>> { card4 });
-				appendCard(card);
-				appendCard(card2);
-				appendCard(playerCard);
-				appendCard(opponentsCard);
 				roundsHandlerPtr->startRound();
 			}
 			break;

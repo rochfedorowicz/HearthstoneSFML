@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="barBlueprint.cpp" />
+    <ClCompile Include="cardBlueprint.cpp" />
     <ClCompile Include="Cards\slideableCardPlacer.cpp" />
     <ClCompile Include="getValueFunctions.cpp" />
     <ClCompile Include="Handlers\dataHandler.cpp" />
@@ -170,9 +171,11 @@
     <ClCompile Include="updateableBar.cpp" />
     <ClCompile Include="updateableRect.cpp" />
     <ClCompile Include="updateableText.cpp" />
+    <ClCompile Include="writtingField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="barBlueprint.h" />
+    <ClInclude Include="cardBlueprint.h" />
     <ClInclude Include="Cards\slideableCardPlacer.h" />
     <ClInclude Include="colorBlueprint.h" />
     <ClInclude Include="getValueFunctions.h" />
@@ -195,11 +198,14 @@
     <ClInclude Include="updateableBar.h" />
     <ClInclude Include="updateableRect.h" />
     <ClInclude Include="updateableText.h" />
+    <ClInclude Include="writtingField.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\background.png" />
+    <Image Include="Textures\backgroundSmall.png" />
     <Image Include="Textures\cardTexture.png" />
     <Image Include="Textures\cardTextureSmall.png" />
+    <Image Include="Textures\slideableDesk.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\Calibri.ttf" />

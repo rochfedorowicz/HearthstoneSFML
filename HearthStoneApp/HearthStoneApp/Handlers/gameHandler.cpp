@@ -23,8 +23,8 @@ GameHandler::GameHandler() {
 	currentWindowPtr = std::make_shared<sf::RenderWindow>(sf::VideoMode(640, 480), "Heartstone: MENU", sf::Style::Titlebar);
 	gameSatate = GameStateEnum::MENU;
 	gameResolution = sf::Vector2i(1920, 1080);
-	playerHandlerPtr = std::make_shared<PlayerHandler>(7, 1, 12);
-	opponentHandlerPtr = std::make_shared<PlayerHandler>(15, 1, 10);
+	playerHandlerPtr = std::make_shared<PlayerHandler>(7, 90, 12);
+	opponentHandlerPtr = std::make_shared<PlayerHandler>(15, 45, 10);
 	roundsHandlerPtr = std::make_shared<RoundsHandler>(30);
 	dataHandlerPtr = std::make_shared<DataHandler>();
 }

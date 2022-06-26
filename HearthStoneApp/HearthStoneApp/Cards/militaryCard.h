@@ -5,38 +5,44 @@
 #include "../updateableText.h"
 #include "../cardBlueprint.h"
 
-//Class representing military card
+/** Class representing military card. */
 class MilitaryCard : public Card {
 	
-	//Lables used to display card statistics
+	/** Lables used to display card statistics. */
 	UpdatableText damageLabel, healthLabel, manaLabel;
 
 protected:
 
-	//Amount of health and damage dealed military card possesses
-	int health, damage, mana;
+	/** Amount of health military card possesses. */
+	int health;
+
+	/** Amount of damage dealed military card possesses. */
+	int damage;
+
+	/** Amount of mana military card possesses. */
+	int mana;
 
 public:
 
-	//Deafult military card constructor
+	/** Main military card's constructor. */
 	MilitaryCard(sf::Vector2f _position, std::shared_ptr<sf::Texture> _texture, int _health, int _damage, int _mana, std::shared_ptr<GameHandler> _gameHandler);
 
-	//Deafult military card constructor
+	/** Military card's constructor that uses predefined set of parameters called blueprint. */
 	MilitaryCard(sf::Vector2f _position, CardBlueprint _cardBlueprint, std::shared_ptr<GameHandler> _gameHandler);
 
-	//Interacting with another cards
+	/** Interacting with another cards. */
 	void interactWithCard(std::shared_ptr<Card> _card);
 
-	//Virtual function that updates state of object
+	/** Updates state of object. */
 	void update();
 
-	//Card type getter
+	/** Card type getter. */
 	virtual CardType getCardType();
 
-	//Logic value indicating if card should be disposed
+	/** Logic value indicating if card should be disposed. */
 	bool shouldBeDestroyed();
 
-	//Function moving object (generally update its poistion)
+	/** Function moving object(generally update its poistion). */
 	void move(sf::Vector2f _change);
 };
 #endif
